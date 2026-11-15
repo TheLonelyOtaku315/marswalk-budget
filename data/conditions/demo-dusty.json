@@ -1,0 +1,51 @@
+{
+  "asOf": "2026-11-14T17:21:00.628Z",
+  "site": "jezero",
+  "synthetic": true,
+  "sol": 1200,
+  "tempC": {
+    "min": -78,
+    "max": -18
+  },
+  "pressurePa": 720,
+  "dustTau": 1.5,
+  "doseRateMSvDay": 0.64,
+  "sep": {
+    "status": "quiet",
+    "lastEvent": null
+  },
+  "evaWindowLocal": {
+    "start": "09:00",
+    "end": "15:00"
+  },
+  "sources": [
+    {
+      "name": "Synthetic MEDA demonstration (CAB, Spain / NASA)",
+      "url": "https://mars.nasa.gov/rss/api/?feed=weather&category=mars2020&feedtype=json",
+      "retrieved": "2026-11-14T17:21:00.628Z",
+      "note": "ASSUMPTION: sol, air temperature and pressure are invented for this demo, not observations."
+    },
+    {
+      "name": "Synthetic DONKI SEP demonstration (NASA CCMC)",
+      "url": "https://ccmc.gsfc.nasa.gov/tools/DONKI/",
+      "retrieved": "2026-11-14T17:21:00.628Z",
+      "note": "ASSUMPTION: invented event status. Earth-side detection used as a proxy for Mars; no real event is asserted."
+    },
+    {
+      "name": "Curiosity RAD / Hassler et al. (2014)",
+      "url": "https://doi.org/10.1126/science.1244797",
+      "retrieved": "2026-11-14T17:21:00.628Z",
+      "note": "Baseline read from CONFIG.radiation.surfaceMSvPerDay; measured at Gale Crater, used as a proxy for Jezero. Not a live measurement."
+    },
+    {
+      "name": "Mars Climate Database (LMD / ESA / CNES), synthetic manual example",
+      "url": "https://www-mars.lmd.jussieu.fr/",
+      "retrieved": "2026-11-14T17:21:00.628Z",
+      "note": "ASSUMPTION: dustTau and EVA window are invented manual demo entries, not values retrieved from MCD."
+    }
+  ],
+  "manual": [
+    "dustTau",
+    "evaWindowLocal"
+  ]
+}

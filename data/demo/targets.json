@@ -1,0 +1,11 @@
+{
+  "habitat": { "name": "Habitat (demo)", "x": 175, "y": 100 },
+  "targets": [
+    { "id": "D1", "name": "Sand sheet edge", "x": 150, "y": 70, "value": 3, "dwellMin": 20, "note": "Synthetic. Check ripple crest firmness." },
+    { "id": "D2", "name": "Delta front layers", "x": 112, "y": 98, "value": 9, "dwellMin": 45, "note": "Synthetic. Exposed layers at the foot of the scarp." },
+    { "id": "D3", "name": "North ramp top", "x": 80, "y": 45, "value": 6, "dwellMin": 25, "note": "Synthetic. Top of the gentle pass up the scarp." },
+    { "id": "D4", "name": "Crater rim ejecta", "x": 60, "y": 118, "value": 8, "dwellMin": 40, "note": "Synthetic. Ejecta brings up deeper material." },
+    { "id": "D5", "name": "Delta top channel", "x": 40, "y": 70, "value": 7, "dwellMin": 30, "note": "Synthetic. Old channel deposit." },
+    { "id": "D6", "name": "South ramp boulders", "x": 130, "y": 165, "value": 4, "dwellMin": 20, "note": "Synthetic. Boulders shed from the scarp." }
+  ]
+}

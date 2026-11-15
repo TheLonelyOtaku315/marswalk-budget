@@ -1,0 +1,101 @@
+<!-- Generated with AI assistance for NASA Space Apps 2026; reviewed by the team -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1c1310">
+  <title>Field tablet | Marswalk Budget</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="js/views/icon-192.png">
+  <link rel="apple-touch-icon" href="js/views/icon-192.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/views.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="js/views/tablet.js"></script>
+</head>
+<body class="tablet">
+  <header class="tablet-header">
+    <a href="index.html" id="console-link">Marswalk Budget</a>
+    <span id="dataset" hidden></span>
+  </header>
+  <main class="tablet-main">
+    <h1>Field tablet</h1>
+    <p id="offline-banner" class="offline-banner" role="status" hidden>Offline: using the plan saved on this device</p>
+    <p id="load-status" role="status">Loading EVA plan…</p>
+    <div id="walk" class="tablet-layout" hidden>
+      <div class="tablet-nav">
+        <section class="card progress-card" aria-labelledby="progress-label">
+          <div class="card-heading">
+            <label id="progress-label" for="progress">Simulate EVA progress</label>
+            <output id="progress-value" for="progress">0%</output>
+          </div>
+          <input id="progress" type="range" min="0" max="1" step="0.001" value="0">
+          <div class="progress-endpoints"><span>Departure</span><span>Habitat return</span></div>
+        </section>
+
+        <div class="turn-back" role="alert" id="turn-back" hidden>
+          <strong>Turn back</strong>
+          <span>You’ve passed the last planned point for returning with your O₂ reserve intact.</span>
+        </div>
+        <p class="storm-guidance" id="storm-guidance" role="status" hidden></p>
+        <p class="storm-guidance" id="tablet-sight" role="status" hidden>Out of habitat’s sight</p>
+        <a class="best-set" id="best-set" hidden></a>
+
+        <section class="card destination-card" aria-labelledby="destination">
+          <div class="destination-top">
+            <div>
+              <p class="label" id="destination-label">Next stop</p>
+              <h2 id="destination"></h2>
+            </div>
+            <div class="bearing" id="bearing">
+              <span class="direction-arrow" id="direction-arrow" aria-hidden="true">↑</span>
+              <span id="bearing-value"></span>
+            </div>
+          </div>
+          <p class="next-maneuver" id="next-maneuver" hidden></p>
+          <dl class="tablet-readings">
+            <div><dt>Direct range</dt><dd id="distance"></dd></div>
+            <div><dt>Elapsed</dt><dd id="elapsed"></dd></div>
+            <div><dt>Time left</dt><dd id="remaining"></dd></div>
+          </dl>
+        </section>
+
+        <section class="card" aria-labelledby="oxygen-heading">
+          <div class="card-heading">
+            <h2 id="oxygen-heading">Suit oxygen</h2>
+            <span class="label" id="estimate"></span>
+          </div>
+          <dl class="tablet-readings">
+            <div><dt>O₂ left</dt><dd id="oxygen-left"></dd></div>
+            <div><dt>O₂ to habitat</dt><dd id="oxygen-home"></dd></div>
+            <div><dt>Reserve</dt><dd id="oxygen-reserve"></dd></div>
+          </dl>
+          <p class="small-note" id="oxygen-note" hidden></p>
+        </section>
+      </div>
+
+      <div class="tablet-context">
+        <section class="card map-card" aria-labelledby="map-heading">
+          <div class="card-heading">
+            <h2 id="map-heading">Route map</h2>
+            <span class="label">North up</span>
+          </div>
+          <div id="map" aria-label="Terrain map showing the route, habitat, stops and astronaut"></div>
+          <p class="map-legend">
+            <span class="legend-position">Astronaut</span>
+            <span class="legend-route">Route</span>
+            <span class="legend-habitat">Habitat</span>
+          </p>
+        </section>
+        <section class="card photo-card" id="photo-card" aria-labelledby="photo-heading" hidden>
+          <h2 id="photo-heading">Stop details</h2>
+          <div id="photos"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

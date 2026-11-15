@@ -1,0 +1,48 @@
+{
+  "asOf": "2026-11-14T17:21:25.586Z",
+  "site": "jezero",
+  "synthetic": false,
+  "sol": 1133,
+  "tempC": {
+    "min": -79.3,
+    "max": -24.7
+  },
+  "pressurePa": 778.9,
+  "dustTau": null,
+  "doseRateMSvDay": 0.64,
+  "sep": {
+    "status": "quiet",
+    "lastEvent": null
+  },
+  "evaWindowLocal": null,
+  "sources": [
+    {
+      "name": "Perseverance MEDA (NASA/JPL; CAB, Spain)",
+      "url": "https://mars.nasa.gov/rss/api/?feed=weather&category=mars2020&feedtype=json",
+      "retrieved": "2026-11-14T17:21:25.586Z",
+      "note": "MEDA, led by Spain's Centro de Astrobiología; sol, air temperature (°C), pressure (Pa). Weather observation date: 2024-04-27; this feed can be archival, not current EVA weather."
+    },
+    {
+      "name": "DONKI SEP (NASA CCMC)",
+      "url": "https://ccmc.gsfc.nasa.gov/DONKI-API/get/SEP?startDate=2026-10-15&endDate=2026-11-14",
+      "retrieved": "2026-11-14T17:21:25.586Z",
+      "note": "Earth-side detection used as a proxy for Mars. Event-start age <= 2 days: alert; <= 7: watch; otherwise quiet (ASSUMPTION). Query covers the last 30 days. Query succeeded; quiet means no recent event start in this catalogue, not a Mars all-clear."
+    },
+    {
+      "name": "Curiosity RAD / Hassler et al. (2014)",
+      "url": "https://doi.org/10.1126/science.1244797",
+      "retrieved": "2026-11-14T17:21:25.586Z",
+      "note": "doseRateMSvDay read from CONFIG.radiation.surfaceMSvPerDay; measured at Gale Crater, used as a proxy for Jezero. Published baseline, not a live dosimeter."
+    },
+    {
+      "name": "Mars Climate Database (LMD / ESA / CNES)",
+      "url": "https://www-mars.lmd.jussieu.fr/",
+      "retrieved": "2026-11-14T17:21:25.586Z",
+      "note": "dustTau and evaWindowLocal require manual entry from the MCD interface and team review; no MCD values were retrieved. The manual EVA window is displayed, not enforced."
+    }
+  ],
+  "manual": [
+    "dustTau",
+    "evaWindowLocal"
+  ]
+}

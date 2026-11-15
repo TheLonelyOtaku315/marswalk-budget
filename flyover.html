@@ -1,0 +1,56 @@
+<!-- Generated with AI assistance for NASA Space Apps 2026; reviewed by the team -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>3D fly-through | Marswalk Budget</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/views.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="js/views/flyover.js"></script>
+</head>
+<body class="flyover">
+  <main class="flyover-stage">
+    <div id="flyover-scene" class="flyover-scene" hidden>
+      <canvas id="flyover-canvas" aria-label="Perspective terrain map of the planned walk"></canvas>
+      <div id="flyover-pins" class="flyover-pins" aria-hidden="true"></div>
+    </div>
+    <header class="flyover-header">
+      <div>
+        <a id="flyover-console" href="index.html">Marswalk Budget</a>
+        <h1>3D fly-through</h1>
+        <p id="flyover-site"></p>
+      </div>
+      <p class="flyover-scale" id="flyover-scale" hidden>2× elevation</p>
+    </header>
+    <section class="flyover-message" id="flyover-message">
+      <p role="status" id="load-status">Loading the planned walk…</p>
+      <a id="flyover-hud" href="hud.html" hidden>Open helmet HUD</a>
+    </section>
+    <footer class="flyover-footer" id="flyover-footer" hidden>
+      <div class="flyover-progress">
+        <button id="flyover-play" type="button">Play</button>
+        <label for="progress">Route progress</label>
+        <input id="progress" type="range" min="0" max="1" step="0.001" value="0">
+        <output id="progress-value" for="progress">0%</output>
+      </div>
+      <div class="flyover-caption">
+        <p id="flyover-next"></p>
+        <p id="flyover-credit"></p>
+      </div>
+      <p class="flyover-gesture">
+        <span>Pause to orbit · Pinch or scroll to zoom</span>
+        <span id="flyover-sight-key" hidden>Dimmed route · Out of habitat’s sight</span>
+      </p>
+    </footer>
+  </main>
+</body>
+</html>

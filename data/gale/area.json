@@ -1,0 +1,17 @@
+{
+  "centerLat": -4.805,
+  "centerLon": 137.384,
+  "sizeM": 2000,
+  "cellSize": 5,
+  "bounds": {
+    "north": -4.7881,
+    "south": -4.8219,
+    "west": 137.36704,
+    "east": 137.40096
+  },
+  "why": "Mount Sharp boxwork region, Gale Crater: Curiosity drove through it from about sol 4578 (June 2025) to sol 4850 (early 2026), sites 117-121; sols 4636 and 4722 are documented boxwork sols. The 2 km square also holds the approach from the north-east (sols ~4480-4570) and the exit to the south (sols ~4850-4930).",
+  "source": "Rover positions from NASA/JPL MMGIS waypoints, https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+  "dem_footprint": {
+    "note": "Inside the USGS MSL Gale 1 m DEM mosaic footprint (lat -5.10 to -4.13, lon 137.12 to 137.68)."
+  }
+}

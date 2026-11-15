@@ -1,0 +1,48 @@
+{
+  "asOf": "2026-11-14T19:30:30.182Z",
+  "site": "gale",
+  "synthetic": false,
+  "sol": 4995,
+  "tempC": {
+    "min": -71,
+    "max": -5
+  },
+  "pressurePa": 777,
+  "dustTau": null,
+  "doseRateMSvDay": 0.64,
+  "sep": {
+    "status": "quiet",
+    "lastEvent": null
+  },
+  "evaWindowLocal": null,
+  "sources": [
+    {
+      "name": "Curiosity REMS (NASA/JPL; CAB, Spain)",
+      "url": "https://mars.nasa.gov/rss/api/?feed=weather&category=msl&feedtype=json",
+      "retrieved": "2026-11-14T19:30:30.182Z",
+      "note": "REMS by Spain's Centro de Astrobiología; outreach feed, not the PDS science product. Sol, air temperature (°C), pressure (Pa); rover location and sampling schedule affect readings. Weather observation date: 2026-08-25; this feed can be archival, not current EVA weather."
+    },
+    {
+      "name": "DONKI SEP (NASA CCMC)",
+      "url": "https://ccmc.gsfc.nasa.gov/DONKI-API/get/SEP?startDate=2026-10-15&endDate=2026-11-14",
+      "retrieved": "2026-11-14T19:30:30.182Z",
+      "note": "Earth-side detection used as a proxy for Mars. Event-start age <= 2 days: alert; <= 7: watch; otherwise quiet (ASSUMPTION). Query covers the last 30 days. Query succeeded; quiet means no recent event start in this catalogue, not a Mars all-clear."
+    },
+    {
+      "name": "Curiosity RAD / Hassler et al. (2014)",
+      "url": "https://doi.org/10.1126/science.1244797",
+      "retrieved": "2026-11-14T19:30:30.182Z",
+      "note": "doseRateMSvDay read from CONFIG.radiation.surfaceMSvPerDay; measured at Gale Crater, the same crater as this dataset. Published baseline, not a live dosimeter."
+    },
+    {
+      "name": "Mars Climate Database (LMD / ESA / CNES)",
+      "url": "https://www-mars.lmd.jussieu.fr/",
+      "retrieved": "2026-11-14T19:30:30.182Z",
+      "note": "dustTau and evaWindowLocal require manual entry from the MCD interface and team review; no MCD values were retrieved. The manual EVA window is displayed, not enforced."
+    }
+  ],
+  "manual": [
+    "dustTau",
+    "evaWindowLocal"
+  ]
+}

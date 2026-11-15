@@ -1,0 +1,322 @@
+{
+  "source": [
+    {
+      "name": "PDS Geosciences MSL APXS",
+      "url": "https://pds-geosciences.wustl.edu/missions/msl/apxs.htm",
+      "retrieved": "2026-11-14T21:48:31.373Z",
+      "note": "APXS science data produced by the University of Guelph team; instrument funded by the Canadian Space Agency."
+    },
+    {
+      "name": "APXS calibrated RDR PDS4 bundle",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/",
+      "productId": "urn:nasa:pds:msl_apxs_calibrated",
+      "retrieved": "2026-11-14T21:48:31.373Z",
+      "note": "Individual RWP CSV products and detached PDS4 labels supply abundances and statistical precision; concentration extras supply target names and source-product associations."
+    },
+    {
+      "name": "APXS concentration extras, sols 4489-4612",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4489_4612.csv",
+      "retrieved": "2026-11-14T21:48:31.373Z"
+    },
+    {
+      "name": "APXS concentration extras, sols 4613-4709",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4613_4709.csv",
+      "retrieved": "2026-11-14T21:48:31.373Z"
+    },
+    {
+      "name": "APXS concentration extras, sols 4710-4843",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4710_4843.csv",
+      "retrieved": "2026-11-14T21:48:31.373Z"
+    },
+    {
+      "name": "APXS RDR Software Interface Specification, section 3.2 and Appendix B.3",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/document/apxs_rdr_sis.pdf",
+      "retrieved": "2026-11-14T21:48:31.373Z",
+      "note": "RWP abundances and statistical uncertainty. Values are not mineral percentages or an oxidation-state measurement."
+    },
+    {
+      "name": "NASA/JPL MMGIS Curiosity waypoints",
+      "url": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+      "retrieved": "2026-11-14T21:48:31.373Z",
+      "note": "APXS product site/drive joined to rover waypoints. This locates the rover station, not the contact point on the rock."
+    },
+    {
+      "name": "MSL public data release schedule",
+      "url": "https://pds-geosciences.wustl.edu/missions/msl/index.htm",
+      "retrieved": "2026-11-14T21:48:31.373Z",
+      "note": "Release 42 covers through sol 4843. Release 43, sols 4844-4967, is scheduled 2026-12-07; G4 sol 4851 is not in the currently released range."
+    }
+  ],
+  "instrument": "APXS (CSA)",
+  "site": "gale",
+  "synthetic": false,
+  "asOf": "2026-11-14T21:48:31.373Z",
+  "credit": "APXS · Canadian Space Agency / NASA",
+  "units": "wt%",
+  "notes": [
+    "Eight reported components are shown without renormalising their sum. Chlorine (Cl) is elemental weight percent, not an oxide.",
+    "FeO(T) maps directly to the PDS FeO column (total iron expressed as FeO equivalent); no new conversion is applied.",
+    "Precision values are the RWP statistical uncertainty, not full analytical accuracy. Different surface preparation/heterogeneity can affect comparisons.",
+    "A zero rounded rover-station distance does not mean the APXS contact point is known to be the exact astronaut stop. DRT identifies a dust-removal-tool brushed measurement."
+  ],
+  "selection": {
+    "note": "ASSUMPTION: association search considers released analyses within 15 sols of each listed stop. Select minimum rover-station distance, then smallest absolute sol offset, preferring a DRT measurement when station and sol tie. This is a curation rule, not a validated geological equivalence radius.",
+    "maxSolOffset": 15,
+    "positionRadiusM": 3389500,
+    "positionModel": "Great-circle distance using the same Mars radius as the route engine; distanceM rounded to the nearest metre."
+  },
+  "byStop": {
+    "G1": {
+      "target": "Hornitos_DRT",
+      "sol": 4580,
+      "stopSol": 4578,
+      "solOffset": 2,
+      "distanceM": 0,
+      "distanceBasis": "Approximate great-circle distance from the astronaut stop to the rover site/drive waypoint; APXS contact-point distance is unknown.",
+      "roverPosition": {
+        "lat": -4.8019306,
+        "lon": 137.3817054,
+        "sol": 4578,
+        "site": 117,
+        "drive": 168
+      },
+      "oxidesWtPct": {
+        "SiO2": 36.9,
+        "FeO(T)": 19.91,
+        "MgO": 4.66,
+        "CaO": 8.58,
+        "SO3": 15.21,
+        "Na2O": 2.68,
+        "Al2O3": 6.67,
+        "Cl": 2.12
+      },
+      "precisionWtPct": {
+        "SiO2": 0.54,
+        "FeO(T)": 0.26,
+        "MgO": 0.17,
+        "CaO": 0.11,
+        "SO3": 0.28,
+        "Na2O": 0.2,
+        "Al2O3": 0.19,
+        "Cl": 0.07
+      },
+      "productId": "APB_804072789RWP45801170168_______P1",
+      "logicalIdentifier": "urn:nasa:pds:msl_apxs_calibrated:data:apb_804072789rwp45801170168_______p1",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04580/apb_804072789rwp45801170168_______p1.csv",
+      "labelUrl": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04580/apb_804072789rwp45801170168_______p1.xml",
+      "sourceTable": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4489_4612.csv",
+      "sourceTarget": "Hornitos_DRT",
+      "sourceDataProducts": [
+        "APB_804072789ESC45801170168_______M1.DAT",
+        "APB_804073674ESC45801170168_______M1.DAT"
+      ],
+      "evidence": {
+        "rwpCsv": "\"oxide\",  \"APXS analysis ver 2\", \"statistical uncertainty (precision)\"\r\nNa2O    ,    2.68  ,    0.20\r\nMgO     ,    4.66  ,    0.17\r\nAl2O3   ,    6.67  ,    0.19\r\nSiO2    ,   36.90  ,    0.54\r\nP2O5    ,    0.88  ,    0.07\r\nSO3     ,   15.21  ,    0.28\r\nCl      ,    2.12  ,    0.07\r\nK2O     ,    0.60  ,    0.04\r\nCaO     ,    8.58  ,    0.11\r\nTiO2    ,    0.64  ,    0.05\r\nCr2O3   ,    0.35  ,    0.03\r\nMnO     ,    0.32  ,    0.03\r\nFeO     ,   19.91  ,    0.26\r\nNi      ,  0.0742  ,  0.0055\r\nZn      ,  0.0426  ,  0.0030\r\nBr      ,  0.0885  ,  0.0030\r\n",
+        "sha256": "e8e2a567666a6c8ad68cd56a89a5a8e664725ecdecc921bdf25165408c9916d6"
+      },
+      "note": "Hornitos_DRT was measured two sols after the listed stop, at its rover station; it is not an APXS analysis dated sol 4578."
+    },
+    "G2": {
+      "target": "Tartagalita_DRT",
+      "sol": 4638,
+      "stopSol": 4636,
+      "solOffset": 2,
+      "distanceM": 8,
+      "distanceBasis": "Approximate great-circle distance from the astronaut stop to the rover site/drive waypoint; APXS contact-point distance is unknown.",
+      "roverPosition": {
+        "lat": -4.80653823,
+        "lon": 137.3793381,
+        "sol": 4636,
+        "site": 118,
+        "drive": 1752
+      },
+      "oxidesWtPct": {
+        "SiO2": 41.12,
+        "FeO(T)": 19.63,
+        "MgO": 8.03,
+        "CaO": 5.14,
+        "SO3": 9.71,
+        "Na2O": 2.77,
+        "Al2O3": 7.51,
+        "Cl": 2.65
+      },
+      "precisionWtPct": {
+        "SiO2": 0.43,
+        "FeO(T)": 0.26,
+        "MgO": 0.17,
+        "CaO": 0.06,
+        "SO3": 0.15,
+        "Na2O": 0.14,
+        "Al2O3": 0.19,
+        "Cl": 0.04
+      },
+      "productId": "APB_809257818RWP46381181752_______P1",
+      "logicalIdentifier": "urn:nasa:pds:msl_apxs_calibrated:data:apb_809257818rwp46381181752_______p1",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04638/apb_809257818rwp46381181752_______p1.csv",
+      "labelUrl": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04638/apb_809257818rwp46381181752_______p1.xml",
+      "sourceTable": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4613_4709.csv",
+      "sourceTarget": "Tartagalita_DRT",
+      "sourceDataProducts": [
+        "APB_809257818ESC46381181752_______M1.DAT",
+        "APB_809261978ESC46381181752_______M1.DAT"
+      ],
+      "evidence": {
+        "rwpCsv": "\"oxide\",  \"APXS analysis ver 2\", \"statistical uncertainty (precision)\"\r\nNa2O    ,    2.77  ,    0.14\r\nMgO     ,    8.03  ,    0.17\r\nAl2O3   ,    7.51  ,    0.19\r\nSiO2    ,   41.12  ,    0.43\r\nP2O5    ,    0.96  ,    0.07\r\nSO3     ,    9.71  ,    0.15\r\nCl      ,    2.65  ,    0.04\r\nK2O     ,    0.62  ,    0.02\r\nCaO     ,    5.14  ,    0.06\r\nTiO2    ,    0.85  ,    0.03\r\nCr2O3   ,    0.38  ,    0.01\r\nMnO     ,    0.20  ,    0.01\r\nFeO     ,   19.63  ,    0.26\r\nNi      ,  0.0719  ,  0.0040\r\nZn      ,  0.0592  ,  0.0020\r\nBr      ,  0.1375  ,  0.0045\r\n",
+        "sha256": "a5ddd174043faf0a7606249214a537f4f53944895d916310f58ef0ff0c42a8f7"
+      },
+      "note": "Tartagalita_DRT was measured two sols after the listed stop. Vitichi was observed at the same station and sol; the brushed DRT analysis is selected rather than averaging the two."
+    },
+    "G3": {
+      "target": "Tesoro_del_Pangal_DRT",
+      "sol": 4716,
+      "stopSol": 4722,
+      "solOffset": -6,
+      "distanceM": 0,
+      "distanceBasis": "Approximate great-circle distance from the astronaut stop to the rover site/drive waypoint; APXS contact-point distance is unknown.",
+      "roverPosition": {
+        "lat": -4.80800755,
+        "lon": 137.3810041,
+        "sol": 4711,
+        "site": 120,
+        "drive": 82
+      },
+      "oxidesWtPct": {
+        "SiO2": 40.28,
+        "FeO(T)": 17.78,
+        "MgO": 6.14,
+        "CaO": 7.61,
+        "SO3": 11.88,
+        "Na2O": 2.77,
+        "Al2O3": 7.41,
+        "Cl": 2.98
+      },
+      "precisionWtPct": {
+        "SiO2": 0.43,
+        "FeO(T)": 0.2,
+        "MgO": 0.17,
+        "CaO": 0.08,
+        "SO3": 0.17,
+        "Na2O": 0.14,
+        "Al2O3": 0.19,
+        "Cl": 0.05
+      },
+      "productId": "APB_816180959RWP47161200082_______P1",
+      "logicalIdentifier": "urn:nasa:pds:msl_apxs_calibrated:data:apb_816180959rwp47161200082_______p1",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04716/apb_816180959rwp47161200082_______p1.csv",
+      "labelUrl": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04716/apb_816180959rwp47161200082_______p1.xml",
+      "sourceTable": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4710_4843.csv",
+      "sourceTarget": "Tesoro_del_Pangal_DRT",
+      "sourceDataProducts": [
+        "APB_816184399ESC47161200082_______M1.DAT",
+        "APB_816180959ESC47161200082_______M1.DAT"
+      ],
+      "evidence": {
+        "rwpCsv": "\"oxide\",  \"APXS analysis ver 2\", \"statistical uncertainty (precision)\"\r\nNa2O    ,    2.77  ,    0.14\r\nMgO     ,    6.14  ,    0.17\r\nAl2O3   ,    7.41  ,    0.19\r\nSiO2    ,   40.28  ,    0.43\r\nP2O5    ,    0.92  ,    0.05\r\nSO3     ,   11.88  ,    0.17\r\nCl      ,    2.98  ,    0.05\r\nK2O     ,    0.66  ,    0.02\r\nCaO     ,    7.61  ,    0.08\r\nTiO2    ,    0.79  ,    0.03\r\nCr2O3   ,    0.34  ,    0.03\r\nMnO     ,    0.18  ,    0.01\r\nFeO     ,   17.78  ,    0.20\r\nNi      ,  0.0603  ,  0.0035\r\nZn      ,  0.0474  ,  0.0015\r\nBr      ,  0.0529  ,  0.0020\r\n",
+        "sha256": "b0d0d2081fda9763e80fef414eb7e263334cb7cb5767ba5232ad926847f6ae74"
+      },
+      "note": "Tesoro_del_Pangal_DRT is the latest released APXS analysis at this rover station in the stop campaign. It is not the Nevado Sajama drill sample. A named Nevado_Sajama_DRT companion from sol 4713 is retained separately.",
+      "relatedMeasurements": [
+        {
+          "target": "Nevado_Sajama_DRT",
+          "sol": 4713,
+          "stopSol": 4722,
+          "solOffset": -9,
+          "distanceM": 0,
+          "distanceBasis": "Approximate great-circle distance from the astronaut stop to the rover site/drive waypoint; APXS contact-point distance is unknown.",
+          "roverPosition": {
+            "lat": -4.80800755,
+            "lon": 137.3810041,
+            "sol": 4711,
+            "site": 120,
+            "drive": 82
+          },
+          "oxidesWtPct": {
+            "SiO2": 43.54,
+            "FeO(T)": 21.27,
+            "MgO": 7.52,
+            "CaO": 4.1,
+            "SO3": 6.63,
+            "Na2O": 2.52,
+            "Al2O3": 7.75,
+            "Cl": 3
+          },
+          "precisionWtPct": {
+            "SiO2": 0.54,
+            "FeO(T)": 0.26,
+            "MgO": 0.17,
+            "CaO": 0.06,
+            "SO3": 0.12,
+            "Na2O": 0.14,
+            "Al2O3": 0.19,
+            "Cl": 0.05
+          },
+          "productId": "APB_815916525RWP47131200082_______P1",
+          "logicalIdentifier": "urn:nasa:pds:msl_apxs_calibrated:data:apb_815916525rwp47131200082_______p1",
+          "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04713/apb_815916525rwp47131200082_______p1.csv",
+          "labelUrl": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04713/apb_815916525rwp47131200082_______p1.xml",
+          "sourceTable": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4710_4843.csv",
+          "sourceTarget": "Nevado_Sajama_DRT",
+          "sourceDataProducts": [
+            "APB_815916525ESC47131200082_______M1.DAT",
+            "APB_815919545ESC47131200082_______M1.DAT"
+          ],
+          "evidence": {
+            "rwpCsv": "\"oxide\",  \"APXS analysis ver 2\", \"statistical uncertainty (precision)\"\r\nNa2O    ,    2.52  ,    0.14\r\nMgO     ,    7.52  ,    0.17\r\nAl2O3   ,    7.75  ,    0.19\r\nSiO2    ,   43.54  ,    0.54\r\nP2O5    ,    1.03  ,    0.07\r\nSO3     ,    6.63  ,    0.12\r\nCl      ,    3.00  ,    0.05\r\nK2O     ,    0.71  ,    0.02\r\nCaO     ,    4.10  ,    0.06\r\nTiO2    ,    0.95  ,    0.05\r\nCr2O3   ,    0.37  ,    0.03\r\nMnO     ,    0.22  ,    0.03\r\nFeO     ,   21.27  ,    0.26\r\nNi      ,  0.0759  ,  0.0040\r\nZn      ,  0.0936  ,  0.0030\r\nBr      ,  0.1230  ,  0.0040\r\n",
+            "sha256": "a79f2050f7bc259a449ed4a3b097867f0c9d94dcff84a1aa20e4d6634b14169a"
+          }
+        }
+      ]
+    },
+    "G4": {
+      "target": "Challapata_DRT",
+      "sol": 4842,
+      "stopSol": 4851,
+      "solOffset": -9,
+      "distanceM": 96,
+      "distanceBasis": "Approximate great-circle distance from the astronaut stop to the rover site/drive waypoint; APXS contact-point distance is unknown.",
+      "roverPosition": {
+        "lat": -4.81042121,
+        "lon": 137.3817563,
+        "sol": 4841,
+        "site": 121,
+        "drive": 762
+      },
+      "oxidesWtPct": {
+        "SiO2": 39.81,
+        "FeO(T)": 20.17,
+        "MgO": 5.86,
+        "CaO": 7.75,
+        "SO3": 13.42,
+        "Na2O": 2.14,
+        "Al2O3": 6.95,
+        "Cl": 0.88
+      },
+      "precisionWtPct": {
+        "SiO2": 0.43,
+        "FeO(T)": 0.26,
+        "MgO": 0.17,
+        "CaO": 0.08,
+        "SO3": 0.15,
+        "Na2O": 0.14,
+        "Al2O3": 0.19,
+        "Cl": 0.03
+      },
+      "productId": "APB_827365543RWP48421210762_______P1",
+      "logicalIdentifier": "urn:nasa:pds:msl_apxs_calibrated:data:apb_827365543rwp48421210762_______p1",
+      "url": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04842/apb_827365543rwp48421210762_______p1.csv",
+      "labelUrl": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/data/sol04842/apb_827365543rwp48421210762_______p1.xml",
+      "sourceTable": "https://pds-geosciences.wustl.edu/msl/msl-m-apxs-4_5-rdr-v1/mslapx_1xxx/extras/msl_apxs_concentrations_4710_4843.csv",
+      "sourceTarget": "Challapata_DRT",
+      "sourceDataProducts": [
+        "APB_827373063ESC48421210762_______M1.DAT",
+        "APB_827365543ESC48421210762_______M1.DAT"
+      ],
+      "evidence": {
+        "rwpCsv": "\"oxide\",  \"APXS analysis ver 2\", \"statistical uncertainty (precision)\"\r\nNa2O    ,    2.14  ,    0.14\r\nMgO     ,    5.86  ,    0.17\r\nAl2O3   ,    6.95  ,    0.19\r\nSiO2    ,   39.81  ,    0.43\r\nP2O5    ,    0.76  ,    0.05\r\nSO3     ,   13.42  ,    0.15\r\nCl      ,    0.88  ,    0.03\r\nK2O     ,    0.55  ,    0.02\r\nCaO     ,    7.75  ,    0.08\r\nTiO2    ,    0.85  ,    0.03\r\nCr2O3   ,    0.34  ,    0.01\r\nMnO     ,    0.07  ,    0.01\r\nFeO     ,   20.17  ,    0.26\r\nNi      ,  0.0626  ,  0.0035\r\nZn      ,  0.0552  ,  0.0020\r\nBr      ,  0.0785  ,  0.0025\r\n",
+        "sha256": "767c56473a1c5c40529220713aabaa576f53995fd6c779e8f4d537f3bab53b0a"
+      },
+      "note": "Nearby contextual sample only: Challapata_DRT is about 96 m away at a different rover station, nine sols before G4. Stop sol 4851 is beyond release 42 (through sol 4843); no exact-stop APXS abundance is asserted.",
+      "exactStopAvailable": false
+    }
+  }
+}

@@ -1,0 +1,122 @@
+<!-- Generated with AI assistance for NASA Space Apps 2026; reviewed by the team -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EVA checklist — Marswalk Budget</title>
+  <meta name="description" content="The astronaut's cuff checklist for the planned walk: timed steps, turn-back time, comm checks and budgets.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap">
+  <style>
+    :root {
+      --paper: #fbf6ee; --ink: #1d1410; --muted: #6c5a4e; --rule: #d9cbbb; --accent: #b4651c;
+      --ok: #1f7a4a; --warn: #a86a00; --bad: #c0301f;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #2a1d17; color: var(--ink); font-family: Barlow, system-ui, sans-serif; }
+    .bar {
+      display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 12px 16px;
+      font-size: 14px;
+    }
+    .bar a, .bar button {
+      font: inherit; font-weight: 600; color: #ffcf6e; background: transparent; border: 1px solid #5a4236;
+      border-radius: 6px; padding: 6px 14px; cursor: pointer; text-decoration: none;
+    }
+    .bar button:hover, .bar a:hover { border-color: #ffcf6e; }
+    #status { color: #f1e6dc; text-align: center; padding: 40px 16px; }
+    .sheet {
+      background: var(--paper); max-width: 760px; margin: 0 auto 32px; padding: 22px 26px 18px;
+      border-radius: 6px; box-shadow: 0 8px 30px #0008;
+    }
+    header { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+    .kicker { margin: 0; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+    h1 { margin: 2px 0 2px; font-size: 26px; line-height: 1.1; }
+    #route { margin: 0; color: var(--muted); font-size: 14px; }
+    .level {
+      font-weight: 700; font-size: 18px; letter-spacing: .06em; padding: 4px 12px; border: 2px solid currentColor;
+      border-radius: 6px; white-space: nowrap;
+    }
+    .level[data-level="GO"] { color: var(--ok); }
+    .level[data-level="CAUTION"] { color: var(--warn); }
+    .level[data-level="NO-GO"] { color: var(--bad); }
+    .fit { margin: 10px 0 6px; font-weight: 700; font-size: 16px; }
+    .fit.ok { color: var(--ok); }
+    .fit.over { color: var(--bad); }
+    .budgets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+    .budget { border: 1px solid var(--rule); border-radius: 6px; padding: 6px 10px; display: flex; flex-direction: column; }
+    .budget.over { border-color: var(--bad); color: var(--bad); }
+    .b-label { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+    .budget strong { font-size: 20px; }
+    .b-limit { font-size: 12px; color: var(--muted); }
+    ol.items { list-style: none; margin: 0; padding: 0; }
+    .item {
+      display: grid; grid-template-columns: 18px 64px minmax(0, 1fr); gap: 10px; align-items: baseline;
+      padding: 6px 2px; border-bottom: 1px solid var(--rule); break-inside: avoid;
+    }
+    .box { width: 14px; height: 14px; border: 1.5px solid var(--ink); border-radius: 2px; align-self: center; }
+    .time { font-variant-numeric: tabular-nums; font-weight: 700; }
+    .what strong { display: block; font-size: 16px; font-weight: 600; }
+    .note { display: block; font-size: 13px; color: var(--muted); }
+    .item.work .what strong { font-weight: 700; }
+    .item.comm .what strong { color: #2f5d8a; }
+    .item.alert { background: #fde4dd; }
+    .item.alert .what strong { color: var(--bad); font-weight: 700; letter-spacing: .02em; }
+    .item.storm { background: #fdf0d3; }
+    .item.storm .what strong { color: var(--warn); }
+    .foot { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
+    .credit { margin: 4px 0 0; font-size: 11px; color: var(--muted); }
+    @media (max-width: 520px) {
+      .sheet { padding: 16px 14px; border-radius: 0; }
+      header { flex-direction: column; }
+      .budgets { grid-template-columns: 1fr; }
+      .budget { flex-direction: row; align-items: baseline; gap: 8px; }
+      .item { grid-template-columns: 16px 54px minmax(0, 1fr); gap: 8px; }
+    }
+    @page { size: auto; margin: 12mm; }
+    @media print {
+      html, body { background: #fff; }
+      header { padding-bottom: 6pt; }
+      .fit { margin: 6pt 0 4pt; }
+      .budgets { margin-bottom: 6pt; }
+      .budget { padding: 3pt 8pt; }
+      .budget strong { font-size: 14pt; }
+      .item { padding: 2pt 0; line-height: 1.2; }
+      .foot { margin-top: 6pt; }
+      .bar, #status { display: none !important; }
+      .sheet { box-shadow: none; max-width: none; margin: 0; padding: 0; background: #fff; border-radius: 0; }
+      h1 { font-size: 20pt; }
+      .what strong { font-size: 11pt; }
+      .note { font-size: 9pt; }
+      .item.alert, .item.storm { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+  <script type="module">
+    import { mountChecklist } from './js/checklist.js';
+    mountChecklist();
+  </script>
+</head>
+<body>
+  <nav class="bar" aria-label="Checklist actions">
+    <a id="back" href="./">Back to the planner</a>
+    <button type="button" id="print">Print EVA checklist</button>
+  </nav>
+  <p id="status">Planning the walk…</p>
+  <main class="sheet" id="sheet" hidden>
+    <header>
+      <div>
+        <p class="kicker">EVA cuff checklist · Marswalk Budget</p>
+        <h1 id="site">—</h1>
+        <p id="route"></p>
+      </div>
+      <span class="level" id="level" title="Go/No-Go from the conditions snapshot and this route's budget" hidden></span>
+    </header>
+    <p class="fit" id="fit"></p>
+    <div class="budgets" id="budgets"></div>
+    <ol class="items" id="items" aria-label="Timed EVA steps"></ol>
+    <p class="foot" id="foot"></p>
+    <p class="credit">Times, oxygen and dose from the Marswalk Budget planner (assumptions in docs/model.md). Educational tool, not flight rules.</p>
+  </main>
+</body>
+</html>

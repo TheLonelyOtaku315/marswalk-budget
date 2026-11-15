@@ -1,0 +1,178 @@
+{
+  "habitat": {
+    "name": "Habitat (Curiosity's path, sol 4548)",
+    "lat": -4.798793,
+    "lon": 137.384045,
+    "note": "Crater-floor spot on Curiosity's path at the end of sol 4548 (site 116, drive 1260), about 500 m north-east of and 40 m below the boxwork."
+  },
+  "targets": [
+    {
+      "id": "G1",
+      "name": "Boxwork trough (sol 4578)",
+      "lat": -4.801931,
+      "lon": 137.381705,
+      "sol": 4578,
+      "value": 5,
+      "dwellMin": 30,
+      "objective": "Image the walls of a trough between boxwork ridges in low morning light.",
+      "note": "Curiosity parked inside a trough of the boxwork terrain here and took large Mastcam stereo mosaics of its walls in morning light (NASA Curiosity blog, sols 4577-4579).",
+      "source": "https://science.nasa.gov/blog/curiosity-blog-sols-4577-4579-watch-the-skies",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04578/opgs/edr/ncam/NLB_803913956EDR_S1170168NCAM00278M_.JPG",
+          "sol": 4578,
+          "camera": "NAV_LEFT_B",
+          "caption": "Sol 4578: Left Navigation Camera, 2025-06-23 (subframe)",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/raw_images/1479903",
+          "imageid": "NLB_803913956EDR_S1170168NCAM00278M_"
+        },
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04578/mhli/4578MH0001630001604253R00_DXXX.jpg",
+          "sol": 4578,
+          "camera": "MAHLI",
+          "caption": "Sol 4578: Mars Hand Lens Imager (MAHLI), 2025-06-23 (subframe)",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1479941",
+          "imageid": "4578MH0001630001604253R00_DXXX"
+        }
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "Río Frío ridge wall (sol 4636)",
+      "lat": -4.806568,
+      "lon": 137.379211,
+      "sol": 4636,
+      "value": 7,
+      "dwellMin": 40,
+      "objective": "Study the wall of a boxwork ridge from its foot.",
+      "note": "Curiosity worked against 'Río Frío', the wall of one of the ridges that cut through the boxwork; the astronaut stop sits 5 m from the rover's spot because the wall itself is steeper than 20° (NASA Curiosity blog, sols 4636-4637).",
+      "source": "https://science.nasa.gov/blog/curiosity-blog-sols-4636-4637-up-against-a-wall/",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04636/mcam/4636ML1081740061804699C00_DXXX.jpg",
+          "sol": 4636,
+          "camera": "MAST_LEFT",
+          "caption": "Sol 4636: Mast Camera (Mastcam), 2025-08-21",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1504654",
+          "imageid": "4636ML1081740061804699C00_DXXX"
+        },
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04636/mcam/4636ML1081700011804664C00_DXXX.jpg",
+          "sol": 4636,
+          "camera": "MAST_LEFT",
+          "caption": "Sol 4636: Mast Camera (Mastcam), 2025-08-21 (subframe)",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1504633",
+          "imageid": "4636ML1081700011804664C00_DXXX"
+        },
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04636/opgs/edr/ncam/NLB_809061081EDR_S1181752NCAM00256M_.JPG",
+          "sol": 4636,
+          "camera": "NAV_LEFT_B",
+          "caption": "Sol 4636: Left Navigation Camera, 2025-08-21 (subframe)",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/raw_images/1503988",
+          "imageid": "NLB_809061081EDR_S1181752NCAM00256M_"
+        }
+      ]
+    },
+    {
+      "id": "G3",
+      "name": "Nevado Sajama / Valle de la Luna drill pair (sol 4722)",
+      "lat": -4.808008,
+      "lon": 137.381004,
+      "sol": 4722,
+      "value": 10,
+      "dwellMin": 70,
+      "objective": "Sample a boxwork ridge and the hollow beside it, about 10 m apart.",
+      "note": "The heart of the boxwork drill campaign: Curiosity drilled 'Valle de la Luna' in the Monte Grande hollow, then 'Nevado Sajama' on the ridge about 10 m away and 2 m higher, to compare ridge and hollow rock (NASA Curiosity blog, sols 4709-4715).",
+      "source": "https://science.nasa.gov/blog/curiosity-blog-sols-4709-4715-drilling-high-and-low-in-the-boxwork-unit",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04711/mcam/4711ML1085810061107646C00_DXXX.jpg",
+          "sol": 4711,
+          "camera": "MAST_LEFT",
+          "caption": "Sol 4711: Mast Camera (Mastcam), 2025-11-06",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1529561",
+          "imageid": "4711ML1085810061107646C00_DXXX"
+        },
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/proj/msl/redops/ods/surface/sol/04711/opgs/edr/ncam/NLB_815713790EDR_F1200060NCAM00485M_.JPG",
+          "sol": 4711,
+          "camera": "NAV_LEFT_B",
+          "caption": "Sol 4711: Left Navigation Camera, 2025-11-06",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/raw_images/1529004",
+          "imageid": "NLB_815713790EDR_F1200060NCAM00485M_"
+        },
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04711/mcam/4711ML1085820001107647C00_DXXX.jpg",
+          "sol": 4711,
+          "camera": "MAST_LEFT",
+          "caption": "Sol 4711: Mast Camera (Mastcam), 2025-11-06 (subframe)",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1529562",
+          "imageid": "4711ML1085820001107647C00_DXXX"
+        }
+      ]
+    },
+    {
+      "id": "G4",
+      "name": "Boxwork exit, sulfate contact (sol 4851)",
+      "lat": -4.812015,
+      "lon": 137.382037,
+      "sol": 4851,
+      "value": 6,
+      "dwellMin": 40,
+      "objective": "Document the contact between the boxwork unit and the polygonal sulfate unit.",
+      "note": "Where Curiosity left the boxwork, it studied the bedrock near the contact with the polygonal sulfate unit to compare textures across it (NASA Curiosity blog, sols 4845-4851).",
+      "source": "https://science.nasa.gov/blog/curiosity-blog-sols-4845-4851-bye-bye-boxwork-bye-bye/",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04851/mcam/4851ML1090600000212355C00_DXXX.jpg",
+          "sol": 4851,
+          "camera": "MAST_LEFT",
+          "caption": "Sol 4851: Mast Camera (Mastcam), 2026-03-30",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1573787",
+          "imageid": "4851ML1090600000212355C00_DXXX"
+        },
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04851/mcam/4851ML1090600010212356C00_DXXX.jpg",
+          "sol": 4851,
+          "camera": "MAST_LEFT",
+          "caption": "Sol 4851: Mast Camera (Mastcam), 2026-03-30",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1573788",
+          "imageid": "4851ML1090600010212356C00_DXXX"
+        },
+        {
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04851/mhli/4851MH0001630001800247R00_DXXX.jpg",
+          "sol": 4851,
+          "camera": "MAHLI",
+          "caption": "Sol 4851: Mars Hand Lens Imager (MAHLI), 2026-03-30 (subframe)",
+          "credit": "NASA/JPL-Caltech/MSSS",
+          "link": "https://mars.nasa.gov/raw_images/1572581",
+          "imageid": "4851MH0001630001800247R00_DXXX"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "NASA/JPL MMGIS MSL waypoints",
+      "url": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+      "retrieved": "2026-11-14T17:30:03.626Z"
+    },
+    {
+      "name": "Curiosity raw images (mars.nasa.gov)",
+      "url": "https://mars.nasa.gov/api/v1/raw_image_items/",
+      "retrieved": "2026-11-14T17:30:03.628Z",
+      "credit": "Navcam NASA/JPL-Caltech; Mastcam and MAHLI NASA/JPL-Caltech/MSSS"
+    }
+  ]
+}

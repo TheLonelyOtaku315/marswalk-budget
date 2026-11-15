@@ -1,0 +1,9 @@
+{
+  "centerLat": 18.4535,
+  "centerLon": 77.4050,
+  "sizeM": 2000,
+  "cellSize": 5,
+  "bounds": { "north": 18.47040, "south": 18.43660, "west": 77.38717, "east": 77.42283 },
+  "why": "Perseverance's delta-front campaign at Jezero (sites 22-33, sols ~409-715): Hawksbill Gap, Wildcat Ridge, the Three Forks sample depot and the climb onto the delta top all fall inside this 2 km square; the scarp gives ~60 m of relief and thousands of Mastcam-Z/Navcam images were taken here.",
+  "source": "Rover positions from NASA/JPL MMGIS waypoints, https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json"
+}

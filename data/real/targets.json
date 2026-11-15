@@ -1,0 +1,311 @@
+{
+  "habitat": {
+    "name": "Habitat (crater floor east of the delta front)",
+    "lat": 18.4535,
+    "lon": 77.415,
+    "note": "Flat crater-floor plain Perseverance crossed on sols 407-409 (elevation about -2549 m, few rocks)."
+  },
+  "targets": [
+    {
+      "id": "R1",
+      "name": "Enchanted Lake",
+      "lat": 18.44894,
+      "lon": 77.4021,
+      "sol": 418,
+      "value": 6,
+      "dwellMin": 30,
+      "note": "Flat-lying layers among the lowest sedimentary units of the delta; the team studied them remotely in April 2022 to build context for the whole delta (NASA blog 'To Sample or Not to Sample').",
+      "source": "https://science.nasa.gov/blog/to-sample-or-not-to-sample",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00419/ids/edr/browse/zcam/ZL0_0419_0704127004_973EBY_N0232096ZCAM08440_1100LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00419/ids/edr/browse/zcam/ZL0_0419_0704127004_973EBY_N0232096ZCAM08440_1100LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00419/ids/edr/browse/zcam/ZL0_0419_0704127004_973EBY_N0232096ZCAM08440_1100LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00419/ids/edr/browse/zcam/ZL0_0419_0704127004_973EBY_N0232096ZCAM08440_1100LMJ01.png",
+          "sol": 419,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 419 (2022-04-25), rover 0 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0419_0704127004_973EBY_N0232096ZCAM08440_1100LMJ",
+          "imageid": "ZL0_0419_0704127004_973EBY_N0232096ZCAM08440_1100LMJ",
+          "distanceM": 0
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00641/ids/edr/browse/ncam/NLF_0641_0723862831_012ECM_N0310500NCAM12641_01_195J01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00641/ids/edr/browse/ncam/NLF_0641_0723862831_012ECM_N0310500NCAM12641_01_195J01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00641/ids/edr/browse/ncam/NLF_0641_0723862831_012ECM_N0310500NCAM12641_01_195J01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00641/ids/edr/browse/ncam/NLF_0641_0723862831_012ECM_N0310500NCAM12641_01_195J01.png",
+          "sol": 641,
+          "camera": "NAVCAM_LEFT",
+          "caption": "Left Navigation Camera (Navcam), sol 641 (2022-12-09), rover 67 m from this stop.",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0641_0723862831_012ECM_N0310500NCAM12641_01_195J",
+          "imageid": "NLF_0641_0723862831_012ECM_N0310500NCAM12641_01_195J",
+          "distanceM": 67
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00420/ids/edr/browse/zcam/ZL0_0420_0704214450_145EBY_N0232532ZCAM08441_0630LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00420/ids/edr/browse/zcam/ZL0_0420_0704214450_145EBY_N0232532ZCAM08441_0630LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00420/ids/edr/browse/zcam/ZL0_0420_0704214450_145EBY_N0232532ZCAM08441_0630LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00420/ids/edr/browse/zcam/ZL0_0420_0704214450_145EBY_N0232532ZCAM08441_0630LMJ01.png",
+          "sol": 420,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 420 (2022-04-26), rover 27 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0420_0704214450_145EBY_N0232532ZCAM08441_0630LMJ",
+          "imageid": "ZL0_0420_0704214450_145EBY_N0232532ZCAM08441_0630LMJ",
+          "distanceM": 27
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "name": "Amalik outcrop (Shuyak and Mageik cores)",
+      "lat": 18.45073,
+      "lon": 77.40144,
+      "sol": 575,
+      "value": 8,
+      "dwellMin": 40,
+      "note": "Fine-grained delta-front mudstone where Perseverance cored samples 14 and 15 (Shuyak, sealed sol 575; Mageik, sol 579), rock of the kind that preserves signs of life well on Earth (NASA 'Meet the Mars Samples: Shuyak and Mageik').",
+      "source": "https://science.nasa.gov/resource/meet-the-mars-samples-shuyak-and-mageik-samples-14-and-15",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/zcam/ZL0_0565_0717089897_784EBY_N0280000ZCAM08585_1100LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/zcam/ZL0_0565_0717089897_784EBY_N0280000ZCAM08585_1100LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/zcam/ZL0_0565_0717089897_784EBY_N0280000ZCAM08585_1100LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/zcam/ZL0_0565_0717089897_784EBY_N0280000ZCAM08585_1100LMJ01.png",
+          "sol": 565,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 565 (2022-09-22), rover 1 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0565_0717089897_784EBY_N0280000ZCAM08585_1100LMJ",
+          "imageid": "ZL0_0565_0717089897_784EBY_N0280000ZCAM08585_1100LMJ",
+          "distanceM": 1
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/ncam/NLF_0565_0717111511_783ECM_N0290000NCAM12565_04_195J01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/ncam/NLF_0565_0717111511_783ECM_N0290000NCAM12565_04_195J01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/ncam/NLF_0565_0717111511_783ECM_N0290000NCAM12565_04_195J01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00565/ids/edr/browse/ncam/NLF_0565_0717111511_783ECM_N0290000NCAM12565_04_195J01.png",
+          "sol": 565,
+          "camera": "NAVCAM_LEFT",
+          "caption": "Left Navigation Camera (Navcam), sol 565 (2022-09-22), rover 0 m from this stop.",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0565_0717111511_783ECM_N0290000NCAM12565_04_195J",
+          "imageid": "NLF_0565_0717111511_783ECM_N0290000NCAM12565_04_195J",
+          "distanceM": 0
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00556/ids/edr/browse/zcam/ZL0_0556_0716303929_863EBY_N0270000ZCAM08577_0630LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00556/ids/edr/browse/zcam/ZL0_0556_0716303929_863EBY_N0270000ZCAM08577_0630LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00556/ids/edr/browse/zcam/ZL0_0556_0716303929_863EBY_N0270000ZCAM08577_0630LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00556/ids/edr/browse/zcam/ZL0_0556_0716303929_863EBY_N0270000ZCAM08577_0630LMJ01.png",
+          "sol": 556,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 556 (2022-09-13), rover 31 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0556_0716303929_863EBY_N0270000ZCAM08577_0630LMJ",
+          "imageid": "ZL0_0556_0716303929_863EBY_N0270000ZCAM08577_0630LMJ",
+          "distanceM": 31
+        }
+      ]
+    },
+    {
+      "id": "R3",
+      "name": "Hawksbill Gap (foot of the climb)",
+      "lat": 18.45766,
+      "lon": 77.40858,
+      "sol": 441,
+      "value": 5,
+      "dwellMin": 20,
+      "note": "Gap in the delta scarp where Perseverance began climbing the 3.5-billion-year-old delta front on sol 441 (17 May 2022), exposing the layer sequence bottom to top (NASA blog 'Next Stop: Hawksbill Gap').",
+      "source": "https://science.nasa.gov/blog/next-stop-hawksbill-gap",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705903377_148EBY_N0244232ZCAM08457_1100LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705903377_148EBY_N0244232ZCAM08457_1100LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705903377_148EBY_N0244232ZCAM08457_1100LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705903377_148EBY_N0244232ZCAM08457_1100LMJ01.png",
+          "sol": 439,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 439 (2022-05-15), rover 34 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0439_0705903377_148EBY_N0244232ZCAM08457_1100LMJ",
+          "imageid": "ZL0_0439_0705903377_148EBY_N0244232ZCAM08457_1100LMJ",
+          "distanceM": 34
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00441/ids/edr/browse/ncam/NLF_0441_0706104122_602ECM_N0250000NCAM13441_04_195J01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00441/ids/edr/browse/ncam/NLF_0441_0706104122_602ECM_N0250000NCAM13441_04_195J01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00441/ids/edr/browse/ncam/NLF_0441_0706104122_602ECM_N0250000NCAM13441_04_195J01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00441/ids/edr/browse/ncam/NLF_0441_0706104122_602ECM_N0250000NCAM13441_04_195J01.png",
+          "sol": 441,
+          "camera": "NAVCAM_LEFT",
+          "caption": "Left Navigation Camera (Navcam), sol 441 (2022-05-18), rover 0 m from this stop.",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0441_0706104122_602ECM_N0250000NCAM13441_04_195J",
+          "imageid": "NLF_0441_0706104122_602ECM_N0250000NCAM13441_04_195J",
+          "distanceM": 0
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705911023_958EBY_N0244232ZCAM03363_0340LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705911023_958EBY_N0244232ZCAM03363_0340LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705911023_958EBY_N0244232ZCAM03363_0340LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00439/ids/edr/browse/zcam/ZL0_0439_0705911023_958EBY_N0244232ZCAM03363_0340LMJ01.png",
+          "sol": 439,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 439 (2022-05-15), rover 34 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0439_0705911023_958EBY_N0244232ZCAM03363_0340LMJ",
+          "imageid": "ZL0_0439_0705911023_958EBY_N0244232ZCAM03363_0340LMJ",
+          "distanceM": 34
+        }
+      ]
+    },
+    {
+      "id": "R4",
+      "name": "Skinner Ridge and Wildcat Ridge",
+      "lat": 18.45869,
+      "lon": 77.40595,
+      "sol": 509,
+      "value": 10,
+      "dwellMin": 50,
+      "note": "First delta cores (Swift Run, sol 490, Skinner Ridge) and the Wildcat Ridge mudstone cores (Hazeltop sol 509, Bearwallow sol 516), where SHERLOC made the mission's richest organic detections, alongside sulfates from an evaporating lake (NASA/JPL PIA24929).",
+      "source": "https://science.nasa.gov/photojournal/perseverance-rock-cores-from-wildcat-ridge",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/zcam/ZL0_0501_0711409483_785EBY_N0261004ZCAM03402_1100LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/zcam/ZL0_0501_0711409483_785EBY_N0261004ZCAM03402_1100LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/zcam/ZL0_0501_0711409483_785EBY_N0261004ZCAM03402_1100LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/zcam/ZL0_0501_0711409483_785EBY_N0261004ZCAM03402_1100LMJ01.png",
+          "sol": 501,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 501 (2022-07-18), rover 17 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0501_0711409483_785EBY_N0261004ZCAM03402_1100LMJ",
+          "imageid": "ZL0_0501_0711409483_785EBY_N0261004ZCAM03402_1100LMJ",
+          "distanceM": 17
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/ncam/NLF_0501_0711424685_635ECM_N0261154NCAM04501_01_195J01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/ncam/NLF_0501_0711424685_635ECM_N0261154NCAM04501_01_195J01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/ncam/NLF_0501_0711424685_635ECM_N0261154NCAM04501_01_195J01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00501/ids/edr/browse/ncam/NLF_0501_0711424685_635ECM_N0261154NCAM04501_01_195J01.png",
+          "sol": 501,
+          "camera": "NAVCAM_LEFT",
+          "caption": "Left Navigation Camera (Navcam), sol 501 (2022-07-18), rover 0 m from this stop.",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0501_0711424685_635ECM_N0261154NCAM04501_01_195J",
+          "imageid": "NLF_0501_0711424685_635ECM_N0261154NCAM04501_01_195J",
+          "distanceM": 0
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00474/ids/edr/browse/zcam/ZL0_0474_0709011677_943EBY_N0260756ZCAM03389_1000LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00474/ids/edr/browse/zcam/ZL0_0474_0709011677_943EBY_N0260756ZCAM03389_1000LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00474/ids/edr/browse/zcam/ZL0_0474_0709011677_943EBY_N0260756ZCAM03389_1000LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00474/ids/edr/browse/zcam/ZL0_0474_0709011677_943EBY_N0260756ZCAM03389_1000LMJ01.png",
+          "sol": 474,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 474 (2022-06-20), rover 7 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0474_0709011677_943EBY_N0260756ZCAM03389_1000LMJ",
+          "imageid": "ZL0_0474_0709011677_943EBY_N0260756ZCAM03389_1000LMJ",
+          "distanceM": 7
+        }
+      ]
+    },
+    {
+      "id": "R5",
+      "name": "Three Forks sample depot",
+      "lat": 18.45263,
+      "lon": 77.40776,
+      "sol": 653,
+      "value": 7,
+      "dwellMin": 25,
+      "note": "Where Perseverance laid down 10 backup sample tubes between sol 653 (21 Dec 2022, first tube 'Malay') and sol 690, the first sample depot on another planet (NASA/JPL PIA25682).",
+      "source": "https://www.jpl.nasa.gov/images/pia25682-perseverances-three-forks-sample-depot-map/",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726416552_785EBY_N0320580ZCAM03515_1100LMJ02_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726416552_785EBY_N0320580ZCAM03515_1100LMJ02_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726416552_785EBY_N0320580ZCAM03515_1100LMJ02_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726416552_785EBY_N0320580ZCAM03515_1100LMJ02.png",
+          "sol": 670,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 670 (2023-01-08), rover 25 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0670_0726416552_785EBY_N0320580ZCAM03515_1100LMJ",
+          "imageid": "ZL0_0670_0726416552_785EBY_N0320580ZCAM03515_1100LMJ",
+          "distanceM": 25
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00654/ids/edr/browse/ncam/NLF_0654_0725008793_634ECM_N0320250NCAM05654_01_195J01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00654/ids/edr/browse/ncam/NLF_0654_0725008793_634ECM_N0320250NCAM05654_01_195J01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00654/ids/edr/browse/ncam/NLF_0654_0725008793_634ECM_N0320250NCAM05654_01_195J01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00654/ids/edr/browse/ncam/NLF_0654_0725008793_634ECM_N0320250NCAM05654_01_195J01.png",
+          "sol": 654,
+          "camera": "NAVCAM_LEFT",
+          "caption": "Left Navigation Camera (Navcam), sol 654 (2022-12-22), rover 8 m from this stop.",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0654_0725008793_634ECM_N0320250NCAM05654_01_195J",
+          "imageid": "NLF_0654_0725008793_634ECM_N0320250NCAM05654_01_195J",
+          "distanceM": 8
+        },
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726425743_738EBY_N0320672ZCAM08667_0340LMJ01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726425743_738EBY_N0320672ZCAM08667_0340LMJ01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726425743_738EBY_N0320672ZCAM08667_0340LMJ01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00670/ids/edr/browse/zcam/ZL0_0670_0726425743_738EBY_N0320672ZCAM08667_0340LMJ01.png",
+          "sol": 670,
+          "camera": "MCZ_LEFT",
+          "caption": "Left Mastcam-Z, sol 670 (2023-01-08), rover 29 m from this stop.",
+          "credit": "NASA/JPL-Caltech/ASU",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_0670_0726425743_738EBY_N0320672ZCAM08667_0340LMJ",
+          "imageid": "ZL0_0670_0726425743_738EBY_N0320672ZCAM08667_0340LMJ",
+          "distanceM": 29
+        }
+      ]
+    },
+    {
+      "id": "R6",
+      "name": "Delta top above Hawksbill Gap",
+      "lat": 18.46167,
+      "lon": 77.40293,
+      "sol": 709,
+      "value": 6,
+      "dwellMin": 25,
+      "note": "About 50 m above the depot on the delta top, reached via the Hawksbill Gap route in February 2023 to start the Delta Top Campaign (NASA/JPL 'Map of Perseverance's Delta Top Campaign').",
+      "source": "https://science.nasa.gov/photojournal/map-of-perseverances-delta-top-campaign",
+      "photos": [
+        {
+          "url": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00709/ids/edr/browse/ncam/NLF_0709_0729893167_568ECM_N0332864NCAM12709_04_195J01_800.jpg",
+          "large": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00709/ids/edr/browse/ncam/NLF_0709_0729893167_568ECM_N0332864NCAM12709_04_195J01_1200.jpg",
+          "thumb": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00709/ids/edr/browse/ncam/NLF_0709_0729893167_568ECM_N0332864NCAM12709_04_195J01_320.jpg",
+          "full": "https://mars.nasa.gov/mars2020-raw-images/pub/ods/surface/sol/00709/ids/edr/browse/ncam/NLF_0709_0729893167_568ECM_N0332864NCAM12709_04_195J01.png",
+          "sol": 709,
+          "camera": "NAVCAM_LEFT",
+          "caption": "Left Navigation Camera (Navcam), sol 709 (2023-02-17), rover 0 m from this stop.",
+          "credit": "NASA/JPL-Caltech",
+          "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_0709_0729893167_568ECM_N0332864NCAM12709_04_195J",
+          "imageid": "NLF_0709_0729893167_568ECM_N0332864NCAM12709_04_195J",
+          "distanceM": 0
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Rover positions: NASA/JPL MMGIS M20 waypoints",
+      "url": "https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json"
+    },
+    {
+      "name": "Photos: Perseverance raw images, NASA/JPL-Caltech/ASU",
+      "url": "https://mars.nasa.gov/mars2020/multimedia/raw-images/"
+    }
+  ],
+  "photosFetched": {
+    "date": "2026-11-14",
+    "method": "Mastcam-Z/Navcam left images taken within 80 m of each stop (rover site/drive -> MMGIS waypoint)",
+    "feed": "https://mars.nasa.gov/rss/api/?feed=raw_images&category=mars2020&feedtype=json&ver=1.2"
+  }
+}
