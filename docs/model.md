@@ -83,6 +83,60 @@ every option is priced with the same walking model, so least oxygen is always th
 others show what safety or distance costs. On the real Jezero walk: least oxygen 2.55 km / 0.356 kg,
 safest 2.63 km / 0.359 kg, shortest 2.54 km / 0.364 kg.
 
+## Check against NASA's figures (2026-11-15)
+
+NASA's *Life Support Baseline Values and Assumptions Document* (BVAD, Anderson, Ewert and Keener,
+NASA/TP-2015-218570/REV1, January 2018, https://ntrs.nasa.gov/citations/20180001338) gives two EVA oxygen figures:
+
+| BVAD | Value |
+|---|---|
+| Table 4-76, EVA O₂ consumption (McBarron et al. 1993; 293 W, RQ 0.9) | **0.075 kg per crew member-hour** |
+| Table 4-75, lunar surface EVA "oxygen losses" (low / nominal / high) | 0.069 / 0.092 / 0.110 kg/CM-h |
+
+Our conversion (20.1 kJ per litre of O₂, 1.429 g/L) turns BVAD's 293 W into exactly 0.075 kg/h, so the energy-to-O₂ step
+agrees with NASA's own number. At our flat-ground walking power (272 W) the suit burns 0.070 kg/h, and the default Gale
+walk (4 stops, 3 h 40 min, 0.27 kg) averages **0.074 kg/h**: inside BVAD's lunar range. The model's oxygen use is
+therefore in the right range; what it adds is *where* the O₂ goes (slope, sand, load, working time).
+
+## Safe havens and supply caches (2026-11-15)
+
+`planWalk(terrain, targets, { havens })` takes optional safe places besides the habitat (CONTRACTS §4):
+
+- **Storm shelter** (`kind: 'shelter'`, e.g. a parked pressurized rover): reaching it with the O₂ reserve intact counts as safe.
+  The point of no return and the dust-storm turn-back are measured to the **nearest** safe place; `turnBack.refuge` names it.
+- **Supply cache** (`kind: 'cache'`): spare suit O₂. If the walk runs out of O₂, the planner tries one detour to a cache at the
+  best place in the visiting order. Arriving refills the suit to full; swapping bottles takes 10 min (`havens.cacheSwapMin`,
+  ASSUMPTION: no Mars suit does this today). The plan then lists `refills`, and `totals.o2UsableKg` grows by what the cache put back.
+
+The places in `data/<site>/havens.json` are **hypothetical**, placed by the team on the walking route. On all three sites the
+"dust storm + heavy kit" walk is over budget on O₂ and fits with the cache.
+
+## Pressurized rover and the walk-back limit (2026-11-15)
+
+`planRover` (`js/rover.js`) plans the same stops as a rover sortie:
+
+- The crew drives in a shirt-sleeve cabin at **10 km/h** on flat ground (PROXY: NASA/USRA pressurized lunar rover design,
+  NTRS 19940021211), slower on grades (`rover.gradeK`, ASSUMPTION), in sand and on rough ground; same 20° limit. The route is the fastest drive.
+- Driving costs no suit O₂. Each stop is its own suited EVA from the rover with a fresh suit; `totals.o2UsedKg` is the longest one.
+- Dose: full surface rate while suited; in the cabin 0.8 × the background rate and 0.2 × the extra from a solar event
+  (ASSUMPTIONS: walls stop solar protons far better than cosmic rays).
+- **Walk-back limit** (Apollo LRV traverse planning): at every point of the drive, the O₂ needed to *walk* to the habitat or a haven
+  (walking model, today's conditions, sample kit left in the rover) must stay within one suit's usable O₂. Parts of the drive past
+  that are reported in `walkback.beyond`, with the last safe point in `walkback.limitPoint`.
+
+Result on our sites: the maps are 2 km squares, so the walk-back never binds (worst case about 5% of a suit). The rover's value here
+is time and dose: under a solar event at Jezero the walk exceeds the dose limit (1.17 mSv) while the rover sortie stays under it (0.88 mSv).
+The walk-back check matters on longer drives; the tests force it with a tiny suit supply.
+
+## Data we looked at but do not use live
+
+- **MOLA** (global elevation, ~463 m/pixel): too coarse for a walk; we use 1 m HiRISE DTMs and keep MOLA for the "Where on Mars?" map.
+- **Mars Climate Sounder** (MRO) column dust: reconstructed maps per sol (Montabone et al. 2020, JGR Planets, arXiv:1907.08187) and the
+  multi-year climatology behind the Mars Climate Database dust scenarios (Montabone et al. 2015, Icarus 251). Our dust switch and the
+  manual dust optical depth field stand in for it.
+- **InSight Mars Weather Service API** (https://api.nasa.gov/, `insight_weather`): still answers, but its newest sol is 675 (October 2020) and
+  the mission ended in December 2022. It is a third site (Elysium Planitia), so it is historical context only, not weather for Gale or Jezero.
+
 ## Proxies and honesty notes
 
 - **Radiation at Jezero** uses Curiosity RAD measurements from **Gale Crater** (Hassler et al. 2014, ~0.64 mSv/day): no surface dosimeter has flown at Jezero. On the Gale dataset the value is measured in place.
@@ -92,6 +146,8 @@ safest 2.63 km / 0.359 kg, shortest 2.54 km / 0.364 kg.
 - **Gale thermal inertia**: no raster found yet, so `data/gale/terrain.json` has no thermal-inertia layer and the engine treats all of Gale as firm ground (no sand penalty).
 
 ## Changes
+
+- 2026-11-15: BVAD cross-check; safe havens and supply caches (`options.havens`); pressurized-rover sorties with the walk-back limit (`js/rover.js`).
 
 - 2026-11-14 16:30: line of sight to the habitat and a 6 h EVA limit (third budget).
 - 2026-11-14 (afternoon): source audit by `codex-conditions` applied. Walking power 300 → **272 W** and working power 200 → **284 W** (Apollo EVA averages); every parameter now has a status and a link; the 20° limit is labelled a lunar proxy; the 1 mSv walk budget is labelled an educational allocation, not a NASA limit.

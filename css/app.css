@@ -317,6 +317,15 @@ body.resizing #map { pointer-events: none; }
 .cond input { grid-row: span 2; width: 18px; height: 18px; accent-color: var(--rust); }
 .cond-name { font-weight: 600; }
 .cond-effect { font-size: 12px; color: var(--muted); }
+/* Travel mode: on foot or pressurized rover (js/rover.js) */
+.travel { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+.travel-label { font-size: 12px; color: var(--muted); margin-right: 2px; }
+.travel-opt {
+  flex: 1 1 0; min-height: 36px; padding: 6px 10px; font: inherit; font-size: 13px; color: var(--text);
+  background: #120d0b; border: 1px solid var(--line); border-radius: 6px; cursor: pointer;
+}
+.travel-opt:hover { border-color: var(--ochre); }
+.travel-opt.on { border-color: var(--ochre); background: #2f2219; box-shadow: inset 0 0 0 1px var(--ochre); font-weight: 600; }
 
 /* ---------- Chart ---------- */
 .chart svg { display: block; width: 100%; height: auto; }
@@ -353,6 +362,10 @@ body.resizing #map { pointer-events: none; }
   font: 12px var(--font); cursor: pointer; padding: 1px 6px;
 }
 .stop-edit button:hover { color: var(--red); border-color: var(--red); }
+.refill-row {
+  font-size: 12px; color: #bfe8ff; padding: 4px 8px; border-left: 3px solid #7fd3ff;
+  background: #10222c; border-radius: 4px;
+}
 .turnback-row {
   font-size: 12px; color: #ffb0a8; padding: 4px 8px; border-left: 3px solid var(--red);
   background: #3a1612; border-radius: 4px;
@@ -391,6 +404,13 @@ body.resizing #map { pointer-events: none; }
   font: 700 14px var(--font); color: #fff; background: #2f6f8f; border: 2px solid #fff;
   box-shadow: 0 2px 6px #000a;
 }
+.mk-haven {
+  width: 28px; height: 28px; border-radius: 6px; display: grid; place-items: center;
+  font: 700 11px var(--font); color: #0b1a22; background: #7fd3ff; border: 2px dashed #fff;
+  box-shadow: 0 2px 6px #000a;
+}
+.mk-haven.shelter { background: #c9b8a6; font-size: 15px; color: #1a0f0a; }
+.mk-haven.used { border-style: solid; box-shadow: 0 0 0 5px #7fd3ff55, 0 2px 6px #000a; }
 .mk-turn {
   width: 34px; height: 34px; display: grid; place-items: center; color: #fff;
   font: 700 18px var(--font); background: var(--red); border: 2px solid #fff; border-radius: 50%;

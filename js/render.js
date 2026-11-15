@@ -203,6 +203,13 @@ export function habitatIcon() {
   return L.divIcon({ className: '', iconSize: [30, 30], iconAnchor: [15, 15], html: '<div class="mk-hab" title="Habitat">H</div>' });
 }
 
+/** Hypothetical safe haven: a supply cache (O₂) or a storm shelter. "used" = the plan refills there. */
+export function havenIcon(kind, used = false) {
+  const label = kind === 'cache' ? 'O₂' : '⌂';
+  const title = kind === 'cache' ? 'Supply cache (hypothetical)' : 'Storm shelter (hypothetical)';
+  return L.divIcon({ className: '', iconSize: [28, 28], iconAnchor: [14, 14], html: `<div class="mk-haven ${kind}${used ? ' used' : ''}" title="${title}">${label}</div>` });
+}
+
 export function turnBackIcon(variant = 'hard') {
   if (variant === 'soft') {
     return L.divIcon({ className: '', iconSize: [28, 28], iconAnchor: [14, 14], html: '<div class="mk-turn soft" title="Latest safe turn-around">↩</div>' });
@@ -257,6 +264,9 @@ export function pathTimeline(plan) {
       o2[k] = lerp(a.o2, b.o2, u);
     }
   }
+  for (const r of plan.refills ?? []) {
+    for (let k = r.pathIndex + 1; k < n; k++) o2[k] -= r.refillKg ?? 0;
+  }
   return { t, o2, exact: false, keys };
 }
 
@@ -269,10 +279,13 @@ function level(frac) { return frac > 1 ? 'red' : frac > 0.8 ? 'amber' : 'ok'; }
 export function renderBudget(container, plan) {
   const T = plan.totals;
   container.replaceChildren();
+  if (plan.vehicle === 'rover') { renderRoverBudget(container, plan); return; }
 
   // Oxygen: bar spans full capacity; hatched area on the right is the reserve.
+  // With a refill at a supply cache, the bar spans capacity + what the cache put back in.
   const o2Frac = T.o2UsedKg / T.o2UsableKg;
-  const cap = T.o2CapacityKg;
+  const refilled = T.o2RefilledKg || 0;
+  const cap = T.o2CapacityKg + refilled;
   const usedPct = Math.min(100, (T.o2UsedKg / cap) * 100);
   const usablePct = (T.o2UsableKg / cap) * 100;
   const o2Bar = el('div', { class: 'bar' },
@@ -282,12 +295,12 @@ export function renderBudget(container, plan) {
     el('div', { class: 'bar-tick', style: `left:calc(${usablePct}% - 1px)`, title: 'Usable limit; reserve beyond' }));
   container.append(el('div', { class: `metric ${level(o2Frac)}` },
     el('div', { class: 'metric-head' },
-      el('span', { class: 'metric-label', html: 'Suit O<sub>2</sub> used' }),
+      el('span', { class: 'metric-label', html: refilled ? 'Suit O<sub>2</sub> used <small>(incl. 1 refill)</small>' : 'Suit O<sub>2</sub> used' }),
       el('span', { class: 'metric-value', html: `${fmtKg(T.o2UsedKg)} <small>/ ${fmtKg(T.o2UsableKg)} kg</small>` })),
     o2Bar,
     el('div', { class: 'metric-foot' },
       el('span', {}, `${Math.round(o2Frac * 100)}% of usable`),
-      el('span', {}, `reserve ${fmtKg(cap - T.o2UsableKg)} kg kept untouched`))));
+      el('span', {}, refilled ? `cache added ${fmtKg(refilled)} kg · reserve ${fmtKg(cap - T.o2UsableKg)} kg untouched` : `reserve ${fmtKg(cap - T.o2UsableKg)} kg kept untouched`))));
 
   // EVA time: walk vs dwell split against the EVA limit (CONTRACTS §4 totals.timeLimitS; 6 h).
   const limit = Number.isFinite(T.timeLimitS) ? T.timeLimitS : null;
@@ -321,23 +334,90 @@ export function renderBudget(container, plan) {
       el('span', {}, `science value ${T.scienceValue}`))));
 }
 
+/** Rover sortie (js/rover.js): longest suited EVA, walk-back worst case, sortie time, cabin-shielded dose. */
+function renderRoverBudget(container, plan) {
+  const T = plan.totals, wb = plan.walkback;
+  const bar = (frac, extra = '') => el('div', { class: 'bar' },
+    el('div', { class: `bar-fill${extra}`, style: `width:${Math.min(100, frac * 100)}%` }),
+    frac > 1 ? el('div', { class: 'bar-tick', style: `left:calc(${100 / frac}% - 1px)`, title: 'Limit' }) : null);
+  const metric = (frac, label, value, foot1, foot2, b = bar(frac)) => container.append(el('div', { class: `metric ${level(frac)}` },
+    el('div', { class: 'metric-head' }, el('span', { class: 'metric-label', html: label }), el('span', { class: 'metric-value', html: value })),
+    b, el('div', { class: 'metric-foot' }, el('span', {}, foot1), el('span', {}, foot2))));
+
+  const wbFrac = wb.maxO2Kg / wb.o2LimitKg;
+  metric(wbFrac, 'Walk-back O<sub>2</sub> <small>(worst point)</small>',
+    `${fmtKg(wb.maxO2Kg)} <small>/ ${fmtKg(wb.o2LimitKg)} kg</small>`,
+    `${Math.round(wbFrac * 100)}% of a suit's usable O₂`, wb.beyond.length ? `${Math.round(wb.beyondM)} m out of range` : 'whole drive in range');
+  const eFrac = T.o2UsedKg / T.o2UsableKg;
+  metric(eFrac, 'Suit O<sub>2</sub> <small>(longest EVA at a stop)</small>',
+    `${fmtKg(T.o2UsedKg)} <small>/ ${fmtKg(T.o2UsableKg)} kg</small>`,
+    `${Math.round(eFrac * 100)}% of usable`, `all EVAs ${fmtKg(T.evaO2TotalKg)} kg (fresh suit each stop)`);
+
+  const limit = T.timeLimitS, total = Math.max(T.totalTimeS, limit) || 1;
+  const pct = (s) => (s / total) * 100;
+  const tFrac = T.totalTimeS / limit;
+  metric(tFrac, 'Sortie time', `${fmtDuration(T.totalTimeS)} <small>/ ${limit / 3600} h</small>`,
+    `driving ${fmtDuration(T.driveTimeS)} · ${fmtKm(T.distanceM)} km`, `suited at stops ${fmtDuration(T.dwellTimeS)}`,
+    el('div', { class: 'bar' },
+      el('div', { class: 'bar-fill', style: `width:${pct(T.driveTimeS)}%;background:var(--ochre)` }),
+      el('div', { class: 'bar-fill dwell', style: `left:${pct(T.driveTimeS)}%;width:${pct(T.dwellTimeS)}%` }),
+      el('div', { class: 'bar-tick', style: `left:calc(${pct(limit)}% - 1px)`, title: 'Sortie limit' })));
+
+  const dFrac = T.doseMSv / T.doseLimitMSv;
+  metric(dFrac, 'Radiation dose', `${fmtMSv(T.doseMSv)} <small>/ ${fmtMSv(T.doseLimitMSv)} mSv</small>`,
+    'cabin shields the drive', `science value ${T.scienceValue}`);
+}
+
 // ---------------------------------------------------------------------------
 // O2 remaining chart (SVG)
 // ---------------------------------------------------------------------------
 
+/** Rover chart: O₂ a crew member would need to walk to safety if the rover broke down, along the drive. */
+function renderRoverChart(container, plan) {
+  const T = plan.totals, wb = plan.walkback;
+  const Wd = 340, Ht = 130, pl = 30, pr = 8, pt = 8, pb = 20;
+  const tMax = Math.max(T.totalTimeS, 60);
+  const top = Math.max(wb.o2LimitKg * 1.15, wb.maxO2Kg * 1.05);
+  const X = (s) => pl + (s / tMax) * (Wd - pl - pr);
+  const Y = (kg) => pt + (1 - kg / top) * (Ht - pt - pb);
+  const pts = plan.profile.filter((q) => q.walkbackO2Kg != null).map((q) => [q.elapsedS, Math.min(q.walkbackO2Kg, top)]);
+  const line = pts.map(([s, kg], i) => `${i ? 'L' : 'M'}${X(s).toFixed(1)},${Y(kg).toFixed(1)}`).join('');
+  const over = wb.beyond.length > 0;
+  let svg = `<svg viewBox="0 0 ${Wd} ${Ht}" role="img" aria-label="Walk-back oxygen needed along the drive">`;
+  svg += `<rect x="${pl}" y="${pt}" width="${Wd - pl - pr}" height="${Y(wb.o2LimitKg) - pt}" fill="#ef4b3f22"/>`;
+  svg += `<line x1="${pl}" x2="${Wd - pr}" y1="${Y(wb.o2LimitKg)}" y2="${Y(wb.o2LimitKg)}" stroke="#ef4b3f" stroke-dasharray="4 3"/>`;
+  svg += `<text x="${Wd - pr}" y="${Y(wb.o2LimitKg) - 3}" text-anchor="end">suit usable ${fmtKg(wb.o2LimitKg)} kg</text>`;
+  if (pts.length) svg += `<path d="${line}L${X(pts[pts.length - 1][0]).toFixed(1)},${Y(0)}L${X(pts[0][0]).toFixed(1)},${Y(0)}Z" fill="${over ? '#ef4b3f33' : '#7fd3ff2a'}"/>`;
+  svg += `<path d="${line}" fill="none" stroke="${over ? '#ef4b3f' : '#7fd3ff'}" stroke-width="2"/>`;
+  for (const s of plan.stops) {
+    if (!Number.isFinite(s.arriveS)) continue;
+    svg += `<rect x="${X(s.arriveS).toFixed(1)}" y="${pt}" width="${Math.max(1, X(s.arriveS + s.dwellMin * 60) - X(s.arriveS)).toFixed(1)}" height="${Y(0) - pt}" fill="#ffffff10"/>`;
+  }
+  svg += `<line x1="${pl}" x2="${pl}" y1="${pt}" y2="${Y(0)}" stroke="#5a4236"/>`;
+  svg += `<line x1="${pl}" x2="${Wd - pr}" y1="${Y(0)}" y2="${Y(0)}" stroke="#5a4236"/>`;
+  svg += `<text x="${pl - 4}" y="${Y(0)}" text-anchor="end">0</text>`;
+  svg += `<text x="${pl}" y="${Ht - 5}">T+0</text>`;
+  svg += `<text x="${Wd - pr}" y="${Ht - 5}" text-anchor="end">${fmtClock(T.totalTimeS)}</text>`;
+  svg += '</svg>';
+  container.innerHTML = svg;
+  container.append(el('div', { class: 'chart-legend' },
+    'kg of suit O₂ needed to walk to the habitat or a haven if the rover broke down at that moment; light bands = suited work at stops. Below the red line = safe.'));
+}
+
 export function renderChart(container, plan, timeline) {
   container.replaceChildren();
+  if (plan.vehicle === 'rover') { renderRoverChart(container, plan); return; }
   const T = plan.totals;
   const Wd = 340, Ht = 130, pl = 30, pr = 8, pt = 8, pb = 20;
   const tMax = Math.max(T.totalTimeS, 60);
   const cap = T.o2CapacityKg;
   const X = (s) => pl + (s / tMax) * (Wd - pl - pr);
   const Y = (kg) => pt + (1 - kg / cap) * (Ht - pt - pb);
-  const reserve = cap - T.o2UsableKg;
+  const reserve = cap - (T.o2UsableKg - (T.o2RefilledKg || 0)); // the reserve never changes with a refill
   const pts = [];
   const step = Math.max(1, Math.floor(timeline.t.length / 300));
   for (let k = 0; k < timeline.t.length; k += step) pts.push([timeline.t[k], cap - timeline.o2[k]]);
-  pts.push([T.totalTimeS, cap - T.o2UsedKg]);
+  pts.push([T.totalTimeS, cap - (T.o2UsedKg - (T.o2RefilledKg || 0))]);
   const line = pts.map(([s, kg], i) => `${i ? 'L' : 'M'}${X(s).toFixed(1)},${Y(Math.max(0, kg)).toFixed(1)}`).join('');
   const area = `${line}L${X(T.totalTimeS).toFixed(1)},${Y(0)}L${X(0)},${Y(0)}Z`;
   const over = T.o2UsedKg > T.o2UsableKg;
@@ -355,6 +435,12 @@ export function renderChart(container, plan, timeline) {
     }
   }
   svg += `<path d="${area}" fill="${over ? '#ef4b3f33' : '#e0a14a33'}"/>`;
+  for (const r of plan.refills ?? []) {
+    if (!Number.isFinite(r.arriveS)) continue;
+    const x = X(r.arriveS);
+    svg += `<line x1="${x}" x2="${x}" y1="${pt}" y2="${Y(0)}" stroke="#7fd3ff" stroke-dasharray="3 3"/>`;
+    svg += `<text x="${x + 3}" y="${pt + 9}" style="fill:#7fd3ff">refill</text>`;
+  }
   svg += `<path d="${line}" fill="none" stroke="${over ? '#ef4b3f' : '#ffcf6e'}" stroke-width="2"/>`;
   for (const s of plan.stops) {
     if (!Number.isFinite(s.arriveS)) continue;

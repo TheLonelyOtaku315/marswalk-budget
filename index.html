@@ -111,6 +111,19 @@
       astronaut, and the best set of stops that fits. Every number is labelled as a published source,
       a proxy, an assumption or a design choice.
     </p>
+    <p>
+      <strong>Check against NASA's figures:</strong> at the Apollo EVA effort we use, the model burns about
+      0.07 kg of O<sub>2</sub> per hour; NASA's life-support reference lists 0.075 kg/h for an EVA crew member (BVAD, Table 4-76)
+      and 0.069 to 0.110 kg/h for lunar surface EVAs (Table 4-75). Our Gale demo walk averages about 0.074 kg/h.
+    </p>
+    <p>
+      <strong>Safe havens (switch in Conditions):</strong> a hypothetical supply cache with spare O<sub>2</sub> and a storm shelter
+      (a parked pressurized rover) placed on the route. The point of no return is then measured to the nearest safe place,
+      and if the walk runs out of O<sub>2</sub> the planner detours to the cache to refill.
+      <strong>Pressurized rover (Travel):</strong> the crew drives at about 10 km/h and suits up only at stops; the cabin cuts
+      the dose, and the plan checks the Apollo-style <em>walk-back limit</em>: if the rover breaks down anywhere, can the crew walk
+      to safety on suit O<sub>2</sub>?
+    </p>
     <ul>
       <li><a href="docs/model.md" target="_blank" rel="noopener">The model and every parameter</a> (docs/model.md)</li>
       <li><a href="docs/model-sources.md" target="_blank" rel="noopener">Source audit with page references</a> (docs/model-sources.md)</li>
@@ -130,6 +143,11 @@
       <li>Weather: Curiosity REMS and Perseverance MEDA, both led by Spain's Centro de Astrobiología (CAB), from the
         <a href="https://mars.nasa.gov/rss/api/?feed=weather&amp;category=mars2020&amp;feedtype=json" target="_blank" rel="noopener">NASA weather feed</a>; dust optical depth from the Mars Climate Database (LMD / ESA / CNES) can be entered by hand (not filled in this snapshot).</li>
       <li>Solar particle events: <a href="https://ccmc.gsfc.nasa.gov/tools/DONKI/" target="_blank" rel="noopener">NASA CCMC DONKI</a>, detected near Earth and used as a proxy for Mars.</li>
+      <li>Suit O<sub>2</sub> cross-check: NASA <a href="https://ntrs.nasa.gov/citations/20180001338" target="_blank" rel="noopener">Life Support Baseline Values and Assumptions Document</a> (BVAD, NASA/TP-2015-218570/REV1, 2018), Tables 4-75 and 4-76.</li>
+      <li>Rover speed: a NASA/USRA pressurized lunar rover design, <a href="https://ntrs.nasa.gov/citations/19940021211" target="_blank" rel="noopener">NTRS 19940021211</a> (10 km/h nominal). Walk-back limit: Apollo lunar rover traverse planning.</li>
+      <li>Dust context: Mars Climate Sounder (MRO) column dust maps,
+        <a href="https://arxiv.org/abs/1907.08187" target="_blank" rel="noopener">Montabone et al. 2020</a>, which also feed the Mars Climate Database dust scenarios.
+        Historical weather at a third site: the <a href="https://api.nasa.gov/" target="_blank" rel="noopener">InSight Mars Weather API</a> (Elysium Planitia; frozen at sol 675, October 2020; mission ended 2022).</li>
       <li>Radiation: Curiosity RAD at Gale, <a href="https://doi.org/10.1126/science.1244797" target="_blank" rel="noopener">Hassler et al. 2014</a> (~0.64 mSv/day;
         <a href="https://www.scienceintheclassroom.org/sites/default/files/research-papers/1244797.full_.pdf" target="_blank" rel="noopener">readable copy</a>). Measured at Gale; used as a proxy at Jezero.</li>
     </ul>
@@ -202,7 +220,7 @@
       </section>
 
       <section class="card">
-        <h2>O<sub>2</sub> remaining along the walk</h2>
+        <h2 id="chart-title">O<sub>2</sub> remaining along the walk</h2>
         <div class="chart" id="chart"></div>
       </section>
 

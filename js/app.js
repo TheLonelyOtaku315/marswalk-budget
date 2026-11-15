@@ -3,6 +3,7 @@
 
 import { latLonToCell } from './engine.js';
 import { planRoute, slopeProfile, MODE_LABELS, ROUTE_MODES } from './routes.js';
+import { planRover } from './rover.js';
 import { CONFIG } from './config.js';
 import { renderPhotos } from './photos.js';
 import { addBaseLayers } from './basemap.js';
@@ -11,7 +12,7 @@ import { loadConditions, toToggles, verdict as conditionsVerdict, renderConditio
 import {
   el, fmtClock, fmtDuration, fmtKg, fmtMSv, cellLatLng, terrainBounds,
   LAYER_INFO, rampCss, paintHillshade, paintSlope, paintScalar, imageLayer,
-  stopIcon, habitatIcon, turnBackIcon, pathTimeline, renderBudget, renderChart,
+  stopIcon, habitatIcon, turnBackIcon, havenIcon, pathTimeline, renderBudget, renderChart,
 } from './render.js';
 
 const L = window.L;
@@ -73,6 +74,9 @@ const state = {
   cond: null,             // loaded conditions snapshot, or null if it could not be loaded
   condError: null,
   chemistry: null,        // Gale APXS card loader (promise), see loadChemistryCard()
+  vehicle: PARAMS.get('vehicle') === 'rover' ? 'rover' : 'walk', // on foot, or a pressurized rover (js/rover.js)
+  havens: [],             // hypothetical supply cache + storm shelter for this site (data/<site>/havens.json)
+  useHavens: PARAMS.get('havens') === '1',
 };
 
 let map, overlays = {}, routeLayer, markerLayer, stepHighlight = null, turnBackMarker = null;
@@ -87,8 +91,10 @@ const planner = (() => {
   const pending = new Map();
   try {
     const routesUrl = new URL('./routes.js', import.meta.url).href;
+    const roverUrl = new URL('./rover.js', import.meta.url).href;
     const src = `
       import { planRoute } from ${JSON.stringify(routesUrl)};
+      import { planRover } from ${JSON.stringify(roverUrl)};
       let terrain = null;
       self.onmessage = async (e) => {
         const m = e.data;
@@ -97,7 +103,9 @@ const planner = (() => {
             terrain = await (await fetch(m.terrainUrl)).json();
             self.postMessage({ id: m.id, ok: true });
           } else {
-            const plan = planRoute(m.mode || 'eco', terrain, m.targetsFile, m.options); // eco = planWalk exactly (CONTRACTS §8)
+            const plan = m.options && m.options.vehicle === 'rover'
+              ? planRover(terrain, m.targetsFile, m.options)
+              : planRoute(m.mode || 'eco', terrain, m.targetsFile, m.options); // eco = planWalk exactly (CONTRACTS §8)
             self.postMessage({ id: m.id, plan });
           }
         } catch (err) { self.postMessage({ id: m.id, error: String(err && err.message || err) }); }
@@ -131,7 +139,7 @@ const planner = (() => {
         catch (err) { if (worker) throw err; } // worker died: fall through to main thread
       }
       await new Promise((r) => setTimeout(r, 30)); // let the "planning…" state paint
-      return planRoute(mode, state.terrain, targetsFile, options);
+      return options.vehicle === 'rover' ? planRover(state.terrain, targetsFile, options) : planRoute(mode, state.terrain, targetsFile, options);
     },
   };
 })();
@@ -170,6 +178,12 @@ async function boot() {
 
   state.terrain = terrain;
   state.habitat = targetsFile.habitat;
+  // Hypothetical safe havens (optional file): a supply cache and a storm shelter on the walking route.
+  try {
+    const r = await fetch(new URL('havens.json', DATA_DIR));
+    state.havens = r.ok ? ((await r.json()).havens ?? []) : [];
+  } catch { state.havens = []; }
+  for (const h of state.havens) if (!Number.isInteger(h.x) && h.lat != null) Object.assign(h, latLonToCell(terrain, h.lat, h.lon));
   state.targets = targetsFile.targets.map((t) => ({ ...t }));
   // Targets given as lat/lon get cell x/y here too, so markers can be drawn before the first plan.
   for (const t of [state.habitat, ...state.targets]) {
@@ -305,6 +319,11 @@ function drawMap() {
       const seg = ll.slice(Math.max(0, a - 1), Math.min(ll.length, b + 2));
       if (seg.length > 1) L.polyline(seg, { pane: 'route', color: '#1a0f0a', weight: 4, dashArray: '3 7', lineCap: 'butt', interactive: false }).addTo(routeLayer);
     }
+    // Rover: stretches of the drive beyond walk-back range (CONTRACTS §4c walkback.beyond), red dashes.
+    for (const [a, b] of plan.walkback?.beyond ?? []) {
+      const seg = ll.slice(Math.max(0, a - 1), Math.min(ll.length, b + 2));
+      if (seg.length > 1) L.polyline(seg, { pane: 'route', color: '#ef4b3f', weight: 4, dashArray: '8 6', interactive: false }).addTo(routeLayer);
+    }
     const legend = $('map-legend');
     legend.hidden = !(plan.lineOfSight?.outOfSightM >= 1);
     if (!legend.hidden) $('map-legend-text').textContent = `Out of sight of the habitat · ${Math.round(plan.lineOfSight.outOfSightM)} m`;
@@ -313,6 +332,14 @@ function drawMap() {
     hover.on('mousemove', (e) => {
       const kk = nearestPathIndex(ll, e.latlng);
       const tl = state.timeline;
+      if (plan.vehicle === 'rover') {
+        const q = plan.profile[kk];
+        const wb = q?.walkbackO2Kg;
+        const to = q?.refuge === 'habitat' ? 'the habitat' : havenName(q?.refuge);
+        hover.setTooltipContent(`${fmtClock(tl.t[kk])} · if the rover breaks here:<br>walk to ${to} on ${wb == null ? '—' : fmtKg(wb)} kg O₂ (limit ${fmtKg(plan.walkback.o2LimitKg)})`);
+        hover.openTooltip(e.latlng);
+        return;
+      }
       const left = plan.totals.o2CapacityKg - tl.o2[kk];
       const pastTurn = plan.turnBack && kk > plan.turnBack.pathIndex;
       const hidden = gaps.some(([a, b]) => kk >= a && kk <= b);
@@ -321,6 +348,19 @@ function drawMap() {
     });
     hover.bindTooltip('', { className: 'tip', sticky: true, direction: 'top', offset: [0, -8] });
     hover.on('click', (e) => { L.DomEvent.stopPropagation(e); });
+  }
+
+  // Hypothetical safe havens (when switched on): supply cache and storm shelter.
+  if (state.useHavens) {
+    const refill = new Map((plan?.refills ?? []).map((r) => [r.id, r]));
+    for (const h of state.havens) {
+      if (!Number.isInteger(h.x)) continue;
+      const r = refill.get(h.id);
+      const tip = `<b>${esc(h.name)}</b> <small>(hypothetical)</small><br>${esc(h.note || '')}${r ? `<br><b>Refill here at ${fmtClock(r.arriveS)}</b> (+${fmtKg(r.refillKg)} kg O₂)` : ''}`;
+      L.marker(cellLatLng(t, h.x, h.y), { icon: havenIcon(h.kind, !!r), zIndexOffset: 450 })
+        .bindTooltip(tip, { className: 'tip', direction: 'top', offset: [0, -14] })
+        .addTo(markerLayer);
+    }
   }
 
   // Habitat
@@ -354,8 +394,17 @@ function drawMap() {
   if (plan?.turnBack) {
     const tb = plan.turnBack;
     turnBackMarker = L.marker(cellLatLng(t, tb.x, tb.y), { icon: turnBackIcon(), zIndexOffset: 2000 })
-      .bindTooltip(`<b>Point of no return</b><br>${fmtClock(tb.elapsedS)} · ${fmtKg(tb.o2UsedKg)} kg O₂ used<br>Past here you can't get home without the reserve.`,
+      .bindTooltip(`<b>Point of no return</b><br>${fmtClock(tb.elapsedS)} · ${fmtKg(tb.o2UsedKg)} kg O₂ used<br>Past here you can't reach ${refugeText(tb)} without the reserve.`,
         { className: 'tip', direction: 'top', offset: [0, -18], permanent: false })
+      .addTo(markerLayer);
+  }
+
+  // Rover: last point of the drive still inside walk-back range.
+  if (plan?.walkback?.limitPoint) {
+    const lp = plan.walkback.limitPoint;
+    turnBackMarker = L.marker(cellLatLng(t, lp.x, lp.y), { icon: turnBackIcon(), zIndexOffset: 2000 })
+      .bindTooltip(`<b>Walk-back limit</b><br>${fmtClock(lp.elapsedS)}<br>Past here, if the rover breaks down, the crew can't walk to safety on suit O₂.`,
+        { className: 'tip', direction: 'top', offset: [0, -18] })
       .addTo(markerLayer);
   }
 
@@ -363,10 +412,15 @@ function drawMap() {
   if (plan && !plan.turnBack && plan.turnBackLatest) {
     const tl = plan.turnBackLatest;
     turnBackMarker = L.marker(cellLatLng(t, tl.x, tl.y), { icon: turnBackIcon('soft'), zIndexOffset: 1500 })
-      .bindTooltip(`<b>Dust-storm turn-back</b><br>${fmtClock(tl.elapsedS)} · ${fmtKg(tl.o2UsedKg)} kg O₂ used<br>If a dust storm starts, turn home by here to keep the full O₂ reserve.`,
+      .bindTooltip(`<b>Dust-storm turn-back</b><br>${fmtClock(tl.elapsedS)} · ${fmtKg(tl.o2UsedKg)} kg O₂ used<br>If a dust storm starts, head for ${refugeText(tl)} by here to keep the full O₂ reserve.`,
         { className: 'tip', direction: 'top', offset: [0, -16], permanent: false })
       .addTo(markerLayer);
   }
+}
+
+/** Where a turn-back sends the astronaut: the habitat, or the nearest haven (CONTRACTS §4 turnBack.refuge). */
+function refugeText(tb) {
+  return !tb?.refuge || tb.refuge === 'habitat' ? 'the habitat' : `the ${havenName(tb.refuge).replace(/ \(.*\)$/, '').toLowerCase()}`;
 }
 
 function nearestPathIndex(ll, p) {
@@ -404,11 +458,18 @@ async function planOtherRoutes(mine, file, options, shown) {
   }
 }
 
+const activeHavens = () => (state.useHavens ? state.havens.map(({ id, name, kind, lat, lon, x, y }) => ({ id, name, kind, lat, lon, x, y })) : []);
+const havenName = (id) => state.havens.find((h) => h.id === id)?.name ?? id;
+
 /** Route option cards: least oxygen / safest / shortest for the same stops and conditions. */
 function renderRoutes() {
   const box = $('routes');
   if (!box) return;
   box.replaceChildren();
+  if (state.vehicle === 'rover') {
+    box.append(el('p', { class: 'muted' }, 'Route options compare ways to walk. The rover takes the fastest drive; switch Travel back to “On foot” to compare walks.'));
+    return;
+  }
   if (!state.plan?.order?.length) {
     box.append(el('p', { class: 'muted' }, 'Select at least one stop to compare routes.'));
     return;
@@ -471,12 +532,14 @@ async function replan() {
   const stopIds = state.targets.filter((t) => state.included.has(t.id)).map((t) => t.id);
   try {
     const file = { habitat: state.habitat, targets: state.targets };
-    const options = { stopIds, conditions: { ...state.conditions } };
+    const options = { stopIds, conditions: { ...state.conditions }, havens: activeHavens() };
+    if (state.vehicle === 'rover') options.vehicle = 'rover';
     const plan = await planner.plan(file, options, state.route);
     if (mine !== planSeq) return; // a newer request superseded this one
     state.plan = plan;
     state.alts = { [state.route]: plan };
-    state.altsPromise = planOtherRoutes(mine, file, options, plan);
+    // Route options compare three ways to walk; a rover sortie has one fastest drive.
+    state.altsPromise = state.vehicle === 'rover' ? null : planOtherRoutes(mine, file, options, plan);
     state.timeline = pathTimeline(plan);
     showError('');
   } catch (err) {
@@ -495,6 +558,7 @@ function renderAll() {
   renderGoNoGo();
   updateLinks();
   if (state.plan) {
+    $('chart-title').innerHTML = state.plan.vehicle === 'rover' ? 'Walk-back O<sub>2</sub> along the drive' : 'O<sub>2</sub> remaining along the walk';
     renderBudget($('budget'), state.plan);
     renderChart($('chart'), state.plan, state.timeline);
   }
@@ -516,7 +580,9 @@ function renderSteps() {
     box.append(el('p', { class: 'muted' }, 'Select at least one stop to get directions.'));
     return;
   }
-  const legs = buildSteps(p, state.terrain, new Map(state.targets.map((t) => [t.id, t.name])));
+  const legs = buildSteps(p, state.terrain, new Map([...state.havens, ...state.targets].map((t) => [t.id, t.name])));
+  const refillIds = new Set((p.refills ?? []).map((r) => r.id));
+  const swapMin = CONFIG.havens?.cacheSwapMin ?? 10;
   const n = legs.reduce((a, l) => a + l.steps.length, 0);
   $('steps-count').textContent = `${n} steps`;
   let clock = 0;
@@ -534,10 +600,12 @@ function renderSteps() {
       list.append(row);
     }
     clock += leg.timeS;
+    const isRefill = refillIds.has(leg.to);
     const arrive = leg.to === 'habitat'
       ? `Back at the habitat · ${fmtClock(clock)}`
+      : isRefill ? `Arrive at ${leg.toName} · ${fmtClock(clock)} · swap in a full O₂ bottle (${swapMin} min)`
       : `Arrive at ${leg.toName} · ${fmtClock(clock)} · work ${leg.dwellMin} min`;
-    clock += (leg.dwellMin || 0) * 60;
+    clock += (isRefill ? swapMin : leg.dwellMin || 0) * 60;
     box.append(el('div', { class: 'steps-leg' },
       el('div', { class: 'steps-leg-head' }, `${li + 1}. To ${leg.toName}`, el('small', {}, ` ${(leg.distanceM / 1000).toFixed(2)} km`)),
       list,
@@ -580,6 +648,7 @@ function renderVerdict() {
   renderBestSubset(p);
   if (!p) return;
   const nStops = p.order.length;
+  if (p.vehicle === 'rover') { renderRoverVerdict(p, v, sub); return; }
   if (p.withinBudget) {
     v.className = 'verdict ok';
     v.textContent = nStops ? `Fits the budget · ${nStops} stop${nStops > 1 ? 's' : ''}` : 'No stops selected';
@@ -591,6 +660,7 @@ function renderVerdict() {
         : ' · dust-storm safe all the way';
     }
     sub.textContent += outOfSightText(p);
+    for (const r of p.refills ?? []) sub.textContent += ` · refill O₂ at the ${havenName(r.id).replace(/ \(.*\)$/, '').toLowerCase()} at ${fmtClock(r.arriveS)}`;
   } else {
     v.className = 'verdict over';
     v.textContent = violationText(p);
@@ -612,6 +682,21 @@ function renderVerdict() {
       el('small', {}, `saves ${fmtKg(d.o2SavedKg)} kg O₂ and ${fmtMSv(d.doseSavedMSv)} mSv · loses ${d.value} science`));
     btn.onclick = () => { state.included.delete(d.id); replan(); };
   }
+}
+
+/** Verdict for a pressurized-rover sortie (js/rover.js): budget, EVA time and the walk-back limit. */
+function renderRoverVerdict(p, v, sub) {
+  const n = p.order.length;
+  const wb = p.walkback;
+  const T = p.totals;
+  v.className = `verdict ${p.withinBudget ? 'ok' : 'over'}`;
+  if (p.withinBudget) v.textContent = n ? `Rover sortie fits · ${n} stop${n > 1 ? 's' : ''}` : 'No stops selected';
+  else v.textContent = p.violations.includes('walkback') ? 'Drive goes beyond walk-back range' : `Rover sortie over: ${p.violations.join(', ')}`;
+  sub.textContent = `${fmtDuration(T.driveTimeS)} driving + ${fmtDuration(T.dwellTimeS)} suited work · science value ${T.scienceValue}`;
+  sub.textContent += wb.beyond.length
+    ? ` · ${Math.round(wb.beyondM)} m of the drive is out of walk-back range (red ↩ marks the limit)`
+    : ` · walk-back OK everywhere (worst ${fmtKg(wb.maxO2Kg)} of ${fmtKg(wb.o2LimitKg)} kg suit O₂)`;
+  if (p.unreachable.length) sub.textContent += ` ${p.unreachable.length} stop${p.unreachable.length > 1 ? 's' : ''} unreachable by rover.`;
 }
 
 /** Engine's best stop set that fits (CONTRACTS §4, feature-detected: absent until the engine lane lands it). */
@@ -719,6 +804,8 @@ function updateLinks() {
   if (fileIds.length !== state.targets.filter((t) => !t.custom).length) q.set('stops', fileIds.join(','));
   for (const c of CONDITIONS) if (state.conditions[c.key]) q.set(c.param, '1');
   if (state.route !== 'eco') q.set('route', state.route); // CONTRACTS §7: tablet and HUD plan the same option
+  if (state.vehicle === 'rover') q.set('vehicle', 'rover'); // console only for now; tablet and HUD plan the walk
+  if (state.useHavens) q.set('havens', '1');
   // Gale always names its snapshot: the tablet/HUD default is Jezero weather (codex-views is changing that).
   if (state.condName !== SITE.defaultCond || DATASET === 'gale') q.set('cond', state.condName);
   const qs = q.toString().replace(/%2C/g, ','); // readable stop lists; URLSearchParams accepts both
@@ -828,6 +915,38 @@ function renderConditions() {
     });
     box.append(row);
   }
+
+  // Travel: on foot or by pressurized rover (js/rover.js).
+  const travel = el('div', { class: 'travel', role: 'group', 'aria-label': 'Travel' }, el('span', { class: 'travel-label' }, 'Travel'));
+  for (const [key, label] of [['walk', 'On foot'], ['rover', 'Pressurized rover']]) {
+    const b = el('button', { type: 'button', class: `travel-opt${state.vehicle === key ? ' on' : ''}`, 'aria-pressed': state.vehicle === key ? 'true' : 'false' }, label);
+    b.addEventListener('click', () => {
+      if (state.vehicle === key) return;
+      state.vehicle = key;
+      renderConditions();
+      replan();
+    });
+    travel.append(b);
+  }
+  box.append(travel);
+  if (state.vehicle === 'rover') {
+    box.append(el('p', { class: 'note' }, 'Crew rides in a shirt-sleeve cabin (~10 km/h) and suits up only at stops. Rule: if the rover breaks down anywhere, they must be able to walk to safety on suit O₂ (the Apollo walk-back limit).'));
+  }
+
+  // Hypothetical safe havens: a supply cache (refills the suit) and a storm shelter (counts as safety).
+  if (state.havens.length) {
+    const input = el('input', { type: 'checkbox', 'aria-label': 'Safe havens' });
+    input.checked = state.useHavens;
+    const row = el('label', { class: `cond${input.checked ? ' on' : ''}` },
+      input, el('span', { class: 'cond-name' }, 'Supply cache + storm shelter'),
+      el('span', { class: 'cond-effect' }, 'hypothetical · refill O₂ · nearer safety'));
+    input.addEventListener('change', () => {
+      state.useHavens = input.checked;
+      row.classList.toggle('on', input.checked);
+      replan();
+    });
+    box.append(row);
+  }
 }
 
 function renderStops() {
@@ -843,11 +962,18 @@ function renderStops() {
     ...state.targets.filter((t) => !state.included.has(t.id)),
   ];
   let turnShown = false;
+  const refillShown = new Set();
   ordered.forEach((t) => {
     const ps = planStop.get(t.id);
     const inc = state.included.has(t.id);
     const isUnreach = inc && unreachable.has(t.id);
     // Show where the turn-back point falls between stops.
+    for (const r of p?.refills ?? []) {
+      if (ps && r.pathIndex < ps.pathIndex && !refillShown.has(r.id)) {
+        refillShown.add(r.id);
+        list.append(el('li', { class: 'refill-row' }, `⛽ Refill O₂ at the ${havenName(r.id).replace(/ \(.*\)$/, '').toLowerCase()} · ${fmtClock(r.arriveS)} · +${fmtKg(r.refillKg)} kg`));
+      }
+    }
     if (p?.turnBack && !turnShown && ps && ps.pathIndex > p.turnBack.pathIndex) {
       list.append(el('li', { class: 'turnback-row' }, `↩ Point of no return at ${fmtClock(p.turnBack.elapsedS)} — stops below need the O₂ reserve`));
       turnShown = true;
@@ -863,7 +989,7 @@ function renderStops() {
     const badge = el('span', { class: `badge${!inc ? ' muted-badge' : isUnreach ? ' bad' : ''}` }, inc ? (isUnreach ? '✕' : num ?? '…') : '–');
     const sub = !inc ? 'not included'
       : isUnreach ? 'unreachable under these conditions'
-      : ps ? `arrive ${fmtClock(ps.arriveS)} · ${t.dwellMin} min on site` : 'planning…';
+      : ps ? `arrive ${fmtClock(ps.arriveS)} · ${t.dwellMin} min on site${ps.evaO2Kg != null ? ` · suited EVA ${fmtKg(ps.evaO2Kg)} kg O₂` : ''}` : 'planning…';
     const main = el('div', {}, el('div', { class: 'stop-name' }, t.name), el('div', { class: 'stop-sub' }, sub));
     if (t.custom) main.append(customEditor(t));
     const right = el('div', { class: 'stop-right', html: `<b>${t.value}</b><br>value` });
@@ -872,6 +998,9 @@ function renderStops() {
     li.addEventListener('click', () => selectStop(t.id));
     list.append(li);
   });
+  for (const r of p?.refills ?? []) {
+    if (!refillShown.has(r.id)) list.append(el('li', { class: 'refill-row' }, `⛽ Refill O₂ at the ${havenName(r.id).replace(/ \(.*\)$/, '').toLowerCase()} · ${fmtClock(r.arriveS)} · +${fmtKg(r.refillKg)} kg (on the way home)`));
+  }
   if (p?.turnBack && !turnShown) {
     list.append(el('li', { class: 'turnback-row' }, `↩ Point of no return at ${fmtClock(p.turnBack.elapsedS)} — on the way home`));
   }

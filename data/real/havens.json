@@ -1,0 +1,22 @@
+{
+  "hypothetical": true,
+  "note": "Hypothetical safe havens for the Jezero walk, placed by the team on the walking route (near the halfway and three-quarter points of the all-stops route, at least 60 m from any stop). No such hardware exists on Mars; they show how pre-placed supplies and a shelter change the plan.",
+  "havens": [
+    {
+      "id": "cache-1",
+      "name": "Supply cache (spare O₂)",
+      "kind": "cache",
+      "lat": 18.455313,
+      "lon": 77.401294,
+      "note": "Pre-placed spare suit O₂ bottles. Walking here refills the suit to full (10 min swap)."
+    },
+    {
+      "id": "shelter-1",
+      "name": "Storm shelter (parked rover)",
+      "kind": "shelter",
+      "lat": 18.450834,
+      "lon": 77.405215,
+      "note": "A parked pressurized rover: reach it with the O₂ reserve intact and you are safe."
+    }
+  ]
+}

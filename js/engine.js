@@ -242,7 +242,7 @@ export function search(g, source, opts = {}) {
   return { dist, prev };
 }
 
-function rebuildPath(prev, source, target) {
+export function rebuildPath(prev, source, target) {
   const out = [];
   for (let c = target; c !== -1; c = prev[c]) {
     out.push(c);
@@ -253,7 +253,7 @@ function rebuildPath(prev, source, target) {
 }
 
 /** Walk a cell-index path and total its distance, time and energy. */
-function measurePath(g, cells) {
+export function measurePath(g, cells) {
   let distanceM = 0, timeS = 0, energyJ = 0;
   const W = g.width;
   for (let i = 1; i < cells.length; i++) {
@@ -376,12 +376,29 @@ export function latLonToCell(terrain, lat, lon) {
  * Points may give { lat, lon } instead of { x, y }; x/y wins if both are present.
  */
 export function resolveTargets(terrain, targetsFile) {
-  const fix = (p) => {
-    if (Number.isInteger(p.x) && Number.isInteger(p.y)) return { ...p };
-    if (p.lat == null || p.lon == null) throw new Error(`target ${p.id ?? p.name} needs x/y or lat/lon`);
-    return { ...p, ...latLonToCell(terrain, p.lat, p.lon) };
-  };
-  return { ...targetsFile, habitat: fix(targetsFile.habitat), targets: targetsFile.targets.map(fix) };
+  return { ...targetsFile, habitat: resolvePoint(terrain, targetsFile.habitat), targets: targetsFile.targets.map((p) => resolvePoint(terrain, p)) };
+}
+
+/** Copy of one point with cell x/y: keeps integer x/y, otherwise converts lat/lon. */
+export function resolvePoint(terrain, p) {
+  if (Number.isInteger(p.x) && Number.isInteger(p.y)) return { ...p };
+  if (p.lat == null || p.lon == null) throw new Error(`point ${p.id ?? p.name} needs x/y or lat/lon`);
+  return { ...p, ...latLonToCell(terrain, p.lat, p.lon) };
+}
+
+/**
+ * Energy (J) to walk from every cell to the nearest refuge, and which refuge that is.
+ * refugeCells[0] is the habitat. Returns { dist: Float64Array, who: Int16Array (index into refugeCells) }.
+ */
+function refugeField(g, refugeCells) {
+  const N = g.width * g.height;
+  const dist = new Float64Array(N).fill(Infinity);
+  const who = new Int16Array(N);
+  refugeCells.forEach((c, r) => {
+    const d = search(g, c, { reverse: true }).dist;
+    for (let i = 0; i < N; i++) if (d[i] < dist[i]) { dist[i] = d[i]; who[i] = r; }
+  });
+  return { dist, who };
 }
 
 /**
@@ -465,7 +482,17 @@ export function planWalk(terrain, targetsFile, options = {}) {
   const hCell = habitat.y * W + habitat.x;
   if (g.blocked[hCell] || gs.blocked[hCell]) throw new Error('habitat sits on impassable ground');
 
-  const nodes = [habitat, ...wanted];
+  // Safe havens (options.havens, CONTRACTS §4): places where the astronaut is safe besides the habitat:
+  // a storm shelter (e.g. a parked pressurized rover) or a supply cache with spare O2 bottles.
+  // The point of no return is measured to the nearest one; caches can also refill the suit.
+  const havens = (options.havens ?? [])
+    .map((h) => resolvePoint(terrain, h))
+    .filter((h) => inGrid(h) && !g.blocked[h.y * W + h.x]);
+  const caches = options.useCaches === false ? [] : havens.filter((h) => h.kind === 'cache');
+
+  const nodes = [habitat, ...wanted, ...caches];
+  const nT = 1 + wanted.length; // nodes[nT..] are supply caches, only visited to refill
+  const isCache = (j) => j >= nT;
   const cells = nodes.map((n) => (inGrid(n) ? n.y * W + n.x : -1));
 
   // One forward search per node gives the full cost matrix.
@@ -481,7 +508,7 @@ export function planWalk(terrain, targetsFile, options = {}) {
   }
 
   const reachable = [], unreachable = [];
-  for (let j = 1; j < n; j++) {
+  for (let j = 1; j < nT; j++) {
     if (Number.isFinite(E[0][j]) && Number.isFinite(E[j][0])) reachable.push(j);
     else unreachable.push(nodes[j].id);
   }
@@ -502,36 +529,66 @@ export function planWalk(terrain, targetsFile, options = {}) {
   const doseLimit = config.radiation.walkLimitMSv;
   const timeLimitS = (config.eva?.maxHours ?? Infinity) * 3600;
 
+  const swapS = (config.havens?.cacheSwapMin ?? 10) * 60;
   const evaluate = (order) => {
     let energyJ = 0, walkTimeS = 0, distanceM = 0, dwellTimeS = 0, scienceValue = 0;
+    // O2 drawn since the last refill (segE) and the most drawn from one fill (maxSegE).
+    let segE = 0, maxSegE = 0, refilledJ = 0, refills = 0;
     let last = 0;
     for (const j of [...order, 0]) {
       const l = leg(last, j);
-      energyJ += l.energyJ; walkTimeS += l.timeS; distanceM += l.distanceM;
-      if (j !== 0) {
+      energyJ += l.energyJ; walkTimeS += l.timeS; distanceM += l.distanceM; segE += l.energyJ;
+      if (j !== 0 && isCache(j)) {
+        // Refill to full on arrival, then spend the bottle-swap time on the fresh supply.
+        maxSegE = Math.max(maxSegE, segE); refilledJ += segE; refills++;
+        dwellTimeS += swapS; segE = swapS * dwellPowerW;
+      } else if (j !== 0) {
         dwellTimeS += nodes[j].dwellMin * 60;
         scienceValue += nodes[j].value;
+        segE += nodes[j].dwellMin * 60 * dwellPowerW;
       }
       last = j;
     }
+    maxSegE = Math.max(maxSegE, segE);
     energyJ += dwellTimeS * dwellPowerW;
     const totalTimeS = walkTimeS + dwellTimeS;
     const o2UsedKg = energyToO2Kg(energyJ, config);
     const dose = doseMSv(totalTimeS, config, p.doseFactor);
-    return { distanceM, walkTimeS, dwellTimeS, totalTimeS, energyJ, o2UsedKg, doseMSv: dose, scienceValue };
+    return {
+      distanceM, walkTimeS, dwellTimeS, totalTimeS, energyJ, o2UsedKg, doseMSv: dose, scienceValue,
+      o2RefilledKg: energyToO2Kg(refilledJ, config),
+      o2MaxDrawKg: refills ? energyToO2Kg(maxSegE, config) : o2UsedKg,
+    };
   };
+  const fitsAll = (r) => r.o2MaxDrawKg <= usable && r.doseMSv <= doseLimit && r.totalTimeS <= timeLimitS;
 
-  const order = bestOrder(E, reachable, config.planner.bruteForceMaxStops);
-  const sums = evaluate(order);
+  let order = bestOrder(E, reachable, config.planner.bruteForceMaxStops);
+  let sums = evaluate(order);
+  // Out of O2? Try one detour to a supply cache, at the best place in the visiting order.
+  if (caches.length && sums.o2MaxDrawKg > usable) {
+    let pick = null;
+    for (let c = nT; c < n; c++) {
+      for (let pos = 0; pos <= order.length; pos++) {
+        const a = pos === 0 ? 0 : order[pos - 1], b = pos === order.length ? 0 : order[pos];
+        if (!Number.isFinite(E[a][c]) || !Number.isFinite(E[c][b])) continue;
+        const cand = [...order.slice(0, pos), c, ...order.slice(pos)];
+        const r = evaluate(cand);
+        if (r.o2MaxDrawKg > usable) continue;
+        if (!pick || (fitsAll(r) && !fitsAll(pick.r)) || (fitsAll(r) === fitsAll(pick.r) && r.energyJ < pick.r.energyJ)) pick = { cand, r };
+      }
+    }
+    if (pick) { order = pick.cand; sums = pick.r; }
+  }
   const totals = {
     ...sums,
-    o2UsableKg: usable,
+    // With a refill the astronaut can spend the refilled O2 too; o2UsedKg <= o2UsableKg still means "fits".
+    o2UsableKg: usable + sums.o2RefilledKg,
     o2CapacityKg: config.suit.o2CapacityKg,
     doseLimitMSv: doseLimit,
     timeLimitS,
   };
   const violations = [];
-  if (totals.o2UsedKg > usable) violations.push('oxygen');
+  if (totals.o2MaxDrawKg > usable) violations.push('oxygen');
   if (totals.doseMSv > doseLimit) violations.push('radiation');
   if (totals.totalTimeS > timeLimitS) violations.push('time');
   const withinBudget = violations.length === 0;
@@ -540,6 +597,7 @@ export function planWalk(terrain, targetsFile, options = {}) {
   const legs = [];
   const path = [];
   const stops = [];
+  const refills = []; // supply-cache visits: { id, name, x, y, pathIndex, arriveS, refillKg }
   let last = 0;
   for (const j of [...order, 0]) {
     const l = leg(last, j);
@@ -552,7 +610,10 @@ export function planWalk(terrain, targetsFile, options = {}) {
     });
     const start = path.length === 0 ? 0 : 1; // drop the shared joint point
     for (let k = start; k < l.pathCells.length; k++) path.push(l.pathCells[k]);
-    if (j !== 0) {
+    if (j !== 0 && isCache(j)) {
+      const c = nodes[j];
+      refills.push({ id: c.id, name: c.name, x: c.x, y: c.y, pathIndex: path.length - 1 });
+    } else if (j !== 0) {
       const s = nodes[j];
       stops.push({ id: s.id, name: s.name, x: s.x, y: s.y, value: s.value, dwellMin: s.dwellMin, pathIndex: path.length - 1 });
     }
@@ -560,44 +621,62 @@ export function planWalk(terrain, targetsFile, options = {}) {
   }
 
   // Timeline along the path: state on arrival at each point and after any dwell there.
+  // baseArr/baseDep: energy already spent when the suit was last filled (0 until a refill).
   const L = path.length;
   const stopAt = new Map(stops.map((s) => [s.pathIndex, s]));
+  const refillAt = new Map(refills.map((r) => [r.pathIndex, r]));
   const arrE = new Float64Array(L), arrT = new Float64Array(L), arrD = new Float64Array(L);
   const depE = new Float64Array(L), depT = new Float64Array(L);
+  const baseArr = new Float64Array(L), baseDep = new Float64Array(L);
   {
-    let e = 0, t = 0, d = 0;
+    let e = 0, t = 0, d = 0, base = 0;
     for (let k = 0; k < L; k++) {
       if (k > 0) {
         const a = path[k - 1], b = path[k];
         const diag = (a % W) !== (b % W) && Math.floor(a / W) !== Math.floor(b / W);
         e += edgeEnergy(g, a, b, diag); t += lastEdgeTimeS; d += lastEdgeDistM;
       }
-      arrE[k] = e; arrT[k] = t; arrD[k] = d;
+      arrE[k] = e; arrT[k] = t; arrD[k] = d; baseArr[k] = base;
       const s = stopAt.get(k);
       if (s) {
         s.arriveS = t; s.arriveO2Kg = energyToO2Kg(e, config);
         e += s.dwellMin * 60 * dwellPowerW; t += s.dwellMin * 60;
       }
-      depE[k] = e; depT[k] = t;
+      const r = refillAt.get(k);
+      if (r) {
+        r.arriveS = t; r.refillKg = energyToO2Kg(e - base, config);
+        base = e;
+        e += swapS * dwellPowerW; t += swapS;
+      }
+      depE[k] = e; depT[k] = t; baseDep[k] = base;
     }
   }
 
-  // Point of no return for a given "energy to get home from each cell" field: the last point
-  // from which walking home on the cheapest path still leaves the O2 reserve untouched.
-  const noReturn = (homeJ) => {
+  // Safe places: the habitat first, then any havens. homeJ fields below give the energy to walk
+  // from each cell to the nearest of them.
+  const refugeIds = ['habitat', ...havens.map((h) => h.id)];
+  const refugeCells = [hCell, ...havens.map((h) => h.y * W + h.x)];
+
+  // Point of no return for a given "energy to the nearest safe place" field: the last point from
+  // which walking there on the cheapest path still leaves the O2 reserve untouched.
+  const noReturn = ({ dist: homeJ, who }) => {
     let firstBad = -1;
     for (let k = 0; k < L; k++) {
-      if (energyToO2Kg(arrE[k] + homeJ[path[k]], config) > usable) { firstBad = k; break; }
+      if (energyToO2Kg(arrE[k] - baseArr[k] + homeJ[path[k]], config) > usable) { firstBad = k; break; }
       // You can also run out of air while working at a stop.
-      if (stopAt.has(k) && energyToO2Kg(depE[k] + homeJ[path[k]], config) > usable) { firstBad = k + 1; break; }
+      if (stopAt.has(k) && energyToO2Kg(depE[k] - baseDep[k] + homeJ[path[k]], config) > usable) { firstBad = k + 1; break; }
     }
     if (firstBad < 0) return null;
     const k = Math.max(0, firstBad - 1);
-    return { pathIndex: k, x: path[k] % W, y: Math.floor(path[k] / W), elapsedS: arrT[k], o2UsedKg: energyToO2Kg(arrE[k], config) };
+    return {
+      pathIndex: k, x: path[k] % W, y: Math.floor(path[k] / W), elapsedS: arrT[k], o2UsedKg: energyToO2Kg(arrE[k], config),
+      refuge: refugeIds[who[path[k]]], // where to head from here: 'habitat' or a haven id
+    };
   };
 
   const toHome = search(g, hCell, { reverse: true }).dist;
-  const turnBack = noReturn(toHome);
+  const toSafe = havens.length ? refugeField(g, refugeCells) : { dist: toHome, who: new Int16Array(g.width * g.height) };
+  const turnBack = noReturn(toSafe);
 
   // turnBackLatest: same test, but as if the contingency conditions (default: a dust storm) began
   // at that point. Gives the astronaut a "turn back by here" marker even on a feasible route.
@@ -607,9 +686,8 @@ export function planWalk(terrain, targetsFile, options = {}) {
     const worst = { ...conditions };
     for (const c of contingency) worst[c] = true;
     const gw = buildCostGrid(terrain, config, worst);
-    const homeW = search(gw, hCell, { reverse: true }).dist;
-    // O2 is spent under today's conditions up to the point, then under the contingency on the way home.
-    turnBackLatest = noReturn(homeW);
+    // O2 is spent under today's conditions up to the point, then under the contingency on the way back.
+    turnBackLatest = noReturn(refugeField(gw, refugeCells));
   } else {
     turnBackLatest = turnBack;
   }
@@ -635,20 +713,21 @@ export function planWalk(terrain, targetsFile, options = {}) {
   // Profile for charts: O2 left, O2 needed to get home, dose and elevation along the route.
   const capacity = config.suit.o2CapacityKg;
   const raw = [];
-  const point = (k, e, t) => ({
+  const point = (k, e, t, base) => ({
     pathIndex: k, elapsedS: t, distanceM: arrD[k],
-    o2RemainingKg: capacity - energyToO2Kg(e, config),
+    o2RemainingKg: capacity - energyToO2Kg(e - base, config),
     o2ToHomeKg: energyToO2Kg(toHome[path[k]], config),
+    o2ToSafetyKg: energyToO2Kg(toSafe.dist[path[k]], config),
     doseMSv: doseMSv(t, config, p.doseFactor),
     elevationM: g.elev[path[k]],
     inSight: Boolean(inSight[k]),
   });
   const keep = new Set([0]);
   for (let k = 0; k < L; k++) {
-    raw.push(point(k, arrE[k], arrT[k]));
-    if (stopAt.has(k)) {
+    raw.push(point(k, arrE[k], arrT[k], baseArr[k]));
+    if (stopAt.has(k) || refillAt.has(k)) {
       keep.add(raw.length - 1);
-      raw.push(point(k, depE[k], depT[k]));
+      raw.push(point(k, depE[k], depT[k], baseDep[k]));
       keep.add(raw.length - 1);
     }
   }
@@ -750,7 +829,7 @@ export function planWalk(terrain, targetsFile, options = {}) {
   return {
     ok: true,
     conditions: { ...conditions },
-    order: order.map((j) => nodes[j].id),
+    order: order.filter((j) => !isCache(j)).map((j) => nodes[j].id), // science stops only; cache visits are in refills
     stops,
     unreachable,
     legs,
@@ -764,5 +843,7 @@ export function planWalk(terrain, targetsFile, options = {}) {
     bestSubset,
     lineOfSight,
     turnBackLatest,
+    havens: havens.map((h) => ({ id: h.id, name: h.name, kind: h.kind, x: h.x, y: h.y })),
+    refills,
   };
 }

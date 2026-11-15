@@ -57,6 +57,27 @@ export const CONFIG = {
     astronautEyeM: 1.8, // DESIGN: suited astronaut's helmet height for line of sight. Artemis traverse plans weigh line of sight to the lander. — NTRS 20230012314 https://ntrs.nasa.gov/api/citations/20230012314/downloads/EarlyArtemisSurfaceNavigation_v1-ION23-XXX-v3.docx
   },
 
+  // ---------- Safe havens and supply caches (planWalk options.havens) ----------
+  // A haven is anywhere the astronaut is safe besides the habitat: a storm shelter (e.g. a parked
+  // pressurized rover) or a supply cache holding spare suit O2. Their places are hypothetical.
+  havens: {
+    cacheSwapMin: 10, // ASSUMPTION: time to swap in a full O2 bottle at a cache; no Mars suit does this today. — NASA BVAD, NASA/TP-2015-218570/REV1 §4.6 https://ntrs.nasa.gov/citations/20180001338
+  },
+
+  // ---------- Pressurized rover (js/rover.js) ----------
+  // The crew drives in a shirt-sleeve cabin and suits up only to work at each stop. The binding
+  // safety rule is the walk-back limit: if the rover breaks down anywhere on the drive, the crew must
+  // be able to walk to safety on suit O2 alone (Apollo LRV traverse planning used the same rule).
+  rover: {
+    speedMps: 2.78, // PROXY: 10 km/h nominal speed of a NASA/USRA pressurized lunar rover design. — NTRS 19940021211 https://ntrs.nasa.gov/citations/19940021211
+    gradeK: 2.6, // ASSUMPTION: speed = speedMps x exp(-gradeK x |grade|): about 23% slower on a 10% grade.
+    maxSlopeDeg: 20, // DESIGN: same slope limit as walking, so the rover never needs ground the walk-back cannot use. — Coan 2021, NTRS 20210000827 https://ntrs.nasa.gov/citations/20210000827
+    cabinGcrDoseFactor: 0.8, // ASSUMPTION: cabin walls cut the background (cosmic-ray) dose only a little; it is hard to shield. — NASA BVAD, NASA/TP-2015-218570/REV1 radiation protection https://ntrs.nasa.gov/citations/20180001338
+    cabinSpeDoseFactor: 0.2, // ASSUMPTION: the cabin works as a storm shelter against solar particles, which are easier to stop. — NASA Space Exploration Vehicle concept (pressurized safe haven) https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf
+    maxHours: 8, // DESIGN: one drive sortie, cabin to cabin, including suited work at stops.
+    walkbackSpeedNote: 'Walk-back uses the walking model under today\'s conditions, without the sample kit.',
+  },
+
   // ---------- Radiation ----------
   radiation: {
     // SOURCE: Hassler et al. (2014), Science 343, Curiosity RAD at Gale Crater:
